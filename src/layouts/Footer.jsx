@@ -1,84 +1,169 @@
 import React from "react";
-import logo from "/assets/images/artukbey-logo.jpg";
-import g2 from "/assets/images/cake3.jpg";
-import g3 from "/assets/images/carousel1.jpg";
-import g4 from "/assets/images/fjbm.jpg";
-import g5 from "/assets/images/smoothi3.jpg";
-import g6 from "/assets/images/sweet.jpg";
-import g7 from "/assets/images/mocktail1.jpg";
-import { useTranslation } from "react-i18next";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaDribbble,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import topTajLogo from "/assets/img/toptajLogo.jpg";
 
 const Footer = () => {
-  const { t } = useTranslation();
-
   return (
-    <footer name="contacts" className=" text-white py-12">
-      <div className="container mx-auto px-4 max-w-[1400px]">
-        <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0 md:space-x-8">
-          {/* Logo Section */}
-          <div className="md:w-1/4">
-            <div className="flex items-center space-x-2">
-              <div className="flex flex-col space-y-5">
-                <span className="text-2xl font-semibold text-primary">
-                  Artukbey Kahve
-                </span>
-                <img src={logo} alt="logo" className="size-40" />
+    <footer name="contacts" className="bg-gray-900 text-white relative tracking-wider font-inter ">
+      {/* Shape Weight Background */}
+      <div className="absolute right-0 bottom-14 z-10">
+        <img
+          src="https://www.commonsupport.com/html/Nasim/Vervoer/images/shape/weight.png"
+          alt="Shape Background"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Footer Top */}
+      <div className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            {/* About Widget */}
+            <div className="space-y-4">
+              <a href="index.html">
+                <img
+                  src={topTajLogo}
+                  alt="Footer Logo"
+                  className="mb-6"
+                />
+              </a>
+              <p className="text-gray-400">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </p>
+            
+            </div>
+
+            {/* Office Info */}
+            <div className="space-y-4">
+              <h5 className="text-3xl -translate-y-1.5 border-b border-b-gray-600 w-fit pr-3 font-bold font-inter">
+                Office Info
+              </h5>
+              {/* Phone */}
+              <div className="flex items-center gap-2  text-white ">
+                <FaPhone className="text-lg bg-yellow-400 p-2 rounded-full" size={35} />
+                <a href="tel:+88123456987231">+964 07701411893</a>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-center gap-2 text-white ">
+                <FaEnvelope className="text-lg bg-yellow-400 p-2 rounded-full" size={35} />
+                <a href="mailto:info@envato.com">info@toptaj.com</a>
+              </div>
+
+              {/* Location */}
+              <div className="flex items-start gap-2 text-white ">
+                <FaMapMarkerAlt className="text-lg mt-1 bg-yellow-400 p-2 rounded-full" size={35} />
+                <p>
+                  380 St Kilda Road, <br />
+                  Kwanjo
+                </p>
+              </div>
+            </div>
+
+            {/* Newsletter */}
+            <div className="space-y-4">
+              <h5 className="text-3xl -translate-y-1.5 border-b border-b-gray-600 w-fit pr-3 font-bold font-inter">Pages</h5>
+         
+              <Link
+                to="/"
+                onClick={() => window.scrollTo(0, 0)}
+                className="inline-block tracking-wider  text-white  py-2 rounded hover:text-yellow-400 transition"
+              >
+                Home
+              </Link>
+              <Link
+                to="about"
+                onClick={() => window.scrollTo(0, 0)}
+                className="inline-block  text-white px-5 py-2 rounded hover:text-yellow-400 transition"
+              >
+                 About Us
+              </Link>
+              <Link
+                to="services"
+                onClick={() => window.scrollTo(0, 0)}
+                className="inline-block tracking-wider  text-white  py-2 rounded hover:text-yellow-400 transition"
+              >
+                 Services
+              </Link>
+          
+              <div className="mt-6">
+                <span className="block mb-2 tracking-wider ">Social Network</span>
+                <div className="flex space-x-4">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white text-xl"
+                  >
+                    <FaFacebook />
+                  </a>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white text-xl"
+                  >
+                    <FaInstagram />
+                  </a>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white text-xl"
+                  >
+                    <FaTwitter />
+                  </a>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white text-xl"
+                  >
+                    <FaDribbble />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Our Projects */}
+            <div>
+              <h5 className="text-3xl -translate-y-1.5 border-b border-b-gray-600 w-fit pr-3 font-bold font-inter">Our Projects</h5>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  "https://www.commonsupport.com/html/Nasim/Vervoer/images/project/project-1.png",
+                  "https://www.commonsupport.com/html/Nasim/Vervoer/images/project/project-2.png",
+                  "https://www.commonsupport.com/html/Nasim/Vervoer/images/project/project-3.png",
+                  "https://www.commonsupport.com/html/Nasim/Vervoer/images/project/project-4.png",
+                  "https://www.commonsupport.com/html/Nasim/Vervoer/images/project/project-5.png",
+                  "https://www.commonsupport.com/html/Nasim/Vervoer/images/project/project-6.png",
+                ].map((image, index) => (
+                  <a
+                    key={index}
+                    href={image}
+                    className="block rounded overflow-hidden"
+                  >
+                    <img
+                      src={image}
+                      alt={`Project ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition transform"
+                    />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
-
-          {/* Working Hours Section */}
-          <div className="md:w-1/4">
-            <h5 className="text-xl font-semibold mb-4">{t("working_hours")}</h5>
-            <ul>
-              <li className="mb-2">
-                <span className="block">{t("sunday_thursday")}</span>
-                <span className="text-gray-400">09:00 am - 12:00 pm</span>
-              </li>
-              <li className="mb-2">
-                <span className="block">{t("only_friday")}</span>
-                <span className="text-gray-400">11:00 am - 12:00 pm</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Us Section */}
-          <div className="md:w-1/4">
-            <h5 className="text-xl font-semibold mb-4">{t("contact_us")}</h5>
-            <ul>
-              <li className="flex items-center mb-2">
-                <i className="fas fa-map-marker-alt text-primary mr-2"></i>
-                <span>{t("address")}</span>
-              </li>
-              <li className="flex items-center mb-2">
-                <i className="fas fa-envelope text-primary mr-2"></i>
-                <span>{t("email")}</span>
-              </li>
-              <li className="flex items-center">
-                <i className="fas fa-phone text-primary mr-2"></i>
-                <span>{t("phone")}</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Gallery Section */}
-          <div className="md:w-1/4">
-            <h5 className="text-xl font-semibold mb-4">{t("gallery")}</h5>
-            <div className="grid grid-cols-3 gap-2">
-              {[g2, g3, g4, g5, g6, g7].map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt="Gallery Image"
-                  className="w-full h-20 object-cover"
-                />
-              ))}
-            </div>
-          </div>
         </div>
+      </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-4 text-center text-gray-500">
-          &copy; 2024 {t("company_name")}. {t("all_rights_reserved")}.
+      {/* Footer Bottom */}
+      <div className="bg-gray-900  py-4">
+        <div className="container mx-auto  border-t border-t-neutral-500 text-center">
+          <p className="text-gray-400">
+            © 2024 TOP SOFT. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>

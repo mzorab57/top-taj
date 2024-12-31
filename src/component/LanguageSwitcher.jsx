@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { GrLanguage } from "react-icons/gr";
 import { useTranslation } from "react-i18next";
+import { CiLocationOn } from "react-icons/ci";
+import { IoLanguageOutline } from "react-icons/io5";
 
 const LanguageSwitcher = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,29 +32,33 @@ const LanguageSwitcher = () => {
   }, []); // Empty dependency array ensures this runs only once on mount
 
   return (
-    <div className="hidden lg:block relative">
+    <div className="hidden font-inter lg:flex items-center justify-center relative border-l-yellow-400  border-l-2 h-full pl-5">
       {/* Language Icon */}
+      <CiLocationOn className="cursor-pointer hover:text-yellow-400" size={30} />
       <div
         onClick={(e) => {
           e.preventDefault();
           setIsOpen(!isOpen); // Toggle dropdown visibility
         }}
-        className={`cursor-pointer py-2 px-4 rounded-lg text-center ${
-          isOpen ? "text-primary" : "text-white"
-        } hover:text-primary`}
+        className={`cursor-pointer py-2 px-4 rounded-lg flex gap-x-5 text-center ${
+          isOpen ? "" : "text-white"
+        } hover:text-yellow-400`}
       >
-        <GrLanguage size={25} />
+       
+          {/* <CiLocationOn size={30} /> */}
+        <IoLanguageOutline className="" size={30} />
+       
       </div>
 
       {/* Dropdown */}
       <div
-        className={`absolute text-center -right-10 mt-2 w-32 py-2 bg-white border-2 border-primary rounded-lg shadow-xl text-black z-50 transition-all duration-300 ease-in-out transform ${
+        className={`absolute text-center -right-10 mt-2 w-32 py-2 bg-white border-4 border-[#033647] rounded-lg shadow-xl text-black z-50 transition-all duration-300 ease-in-out transform ${
           isOpen ? "opacity-100 scale-100" : "opacity-0 scale-90 pointer-events-none"
         }`}
       >
         {/* English */}
         <div
-          className="block px-4 py-2 text-sm hover:bg-primary/30 cursor-pointer"
+          className="block px-4 py-2 text-sm hover:bg-[#033647]/50 cursor-pointer"
           onClick={(e) => {
             e.preventDefault();
             changeLanguage("en"); // English
@@ -62,7 +68,7 @@ const LanguageSwitcher = () => {
         </div>
         {/* Arabic */}
         <div
-          className="block px-4 py-2 text-sm hover:bg-primary/30 cursor-pointer"
+          className="block px-4 py-2 text-sm hover:bg-[#033647]/50 cursor-pointer"
           onClick={(e) => {
             e.preventDefault();
             changeLanguage("ar"); // Arabic
@@ -72,7 +78,7 @@ const LanguageSwitcher = () => {
         </div>
         {/* Kurdish */}
         <div
-          className="block px-4 py-2 text-sm hover:bg-primary/30 cursor-pointer"
+          className="block px-4 py-2 text-sm hover:bg-[#033647]/50 cursor-pointer"
           onClick={(e) => {
             e.preventDefault();
             changeLanguage("ku"); // Kurdish

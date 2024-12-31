@@ -4,11 +4,22 @@ export default {
   
   theme: {
     extend: {
+      animation: {
+        slowPing: "ping 2s cubic-bezier(0, 0, 0.2, 1) infinite", // 2 چرکە
+      },
+      keyframes: {
+        ping: {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '75%, 100%': { transform: 'scale(1.5)', opacity: '0.5' },
+        },
+      },
       fontFamily: {
-        'bebas': ['Bebas Neue', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        pacifico: ['pacifico', 'sans-serif'],
       },
       colors: {
-        primary: '#b89272', // Define a primary color
+        primary: '#033647', // Define a primary color
         // secondary: '#D97706', // Define a secondary color
         // accent: '#4ADE80', // Define an accent color
         // customGray: '#F3F4F6', // Custom gray color

@@ -1,22 +1,16 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Hero from "../pages/Hero";
-import About from "../pages/About";
-import Services from "../pages/Services";
-import Menu from "../pages/Menu";
-import Choose from "../pages/Choose";
-import Carousel from "../pages/Carousel";
-import Numbers from "../pages/Numbers";
-import Booking from "../pages/Booking";
-import FeedBack from "../pages/FeedBack";
+import Hero from "../component/Hero";
+import Track from "../component/Track";
+import Work from "../component/Work";
 import ServicesSection from "../pages/ServicesSection";
-import AllMenu from "../pages/AllMenu";
+import About from "../pages/About";
 
-const AppRoutes = ({ setMenuOpen }) => {
+const AppRoutes = () => {
   return (
     // aw set show service bo awaia katek mouse lasar page lachu la har shwenek bet colse aw hover bkat
-    <div onMouseOut={() => setMenuOpen(false)}>
+    <div>
       <Routes>
         <Route
           index
@@ -24,20 +18,13 @@ const AppRoutes = ({ setMenuOpen }) => {
           element={
             <>
               <Hero />
-              {/* <ModelViewer /> */}
-              {/* <About />
-              <Services />
-              <Menu />
-              <Choose />
-              <Carousel />
-              <FeedBack />
-              <Numbers />
-              <Booking /> */}
+              <Track />
+              <Work />
             </>
           }
         />
         <Route path="/services" element={<ServicesSection />} />
-        <Route path="/menu" element={<AllMenu />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </div>
   );

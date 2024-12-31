@@ -1,51 +1,39 @@
 import React, { useState } from "react";
-import services_vide from "/assets/videos/services-vide.mp4";
-import Services from "../pages/Services";
+import s from "/assets/img/bg-1.jpg";
+import WhyChooseUs from "../component/WhyChooseUs";
 import { useTranslation } from "react-i18next";
 
 const ServicesSection = () => {
   const { t } = useTranslation();
-  const [color, setColor] = useState(false);
-  const [p, setP] = useState("");
 
-  const changeHeaderColor = () => {
-    if (window.scrollY >= 5) {
-      setColor(true);
-      setP("pt-[calc(1.5rem+1px)]");
-    } else {
-      setP("pt-[calc(0rem+0px)]");
-    }
-  };
-
-  window.addEventListener("scroll", changeHeaderColor);
+  // window.addEventListener("scroll", changeHeaderColor);
 
   return (
     <section
-      className={`text-white ${
-        color
-          ? `${p} transition-all duration-1000 ease-in-out`
-          : "transition-all duration-1000 ease-in-out"
-      }`}
+      className={`text-white  
+         transition-all duration-1000 ease-in-out`}
     >
       {/* Hero Section */}
       <div
-        className={`relative w-full bg-black h-[720px] flex items-center justify-start`}
+        className={`relative w-full bg-black h-[500px] flex items-center justify-start`}
       >
-        <video
-          src={services_vide}
-          autoPlay
-          loop
-          muted
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
-        ></video>
-        <div className="relative z-10 text-white md:text-center w-[700px] p-4 md:p-10">
-          <h1 className="md:text-7xl text-4xl font-semibold">
+        <img
+          src={s}
+          alt="background"
+          className="object-cover h-[500px] w-full brightness-50"
+        />
+
+        <div className="absolute w-full  bottom-[30%]">
+          <h1 className="md:text-7xl text-4xl font-semibold   text-center">
             {t("services")}
+          </h1>
+          <h1 className=" text-xl text-gray-300    text-center">
+            Go beyond logistics, make the revolution business.
           </h1>
         </div>
       </div>
 
-      <Services />
+      <WhyChooseUs />
     </section>
   );
 };
