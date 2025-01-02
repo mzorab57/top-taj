@@ -6,6 +6,7 @@ import Track from "../component/Track";
 import Work from "../component/Work";
 import ServicesSection from "../pages/ServicesSection";
 import About from "../pages/About";
+import Dashboard from "../pages/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         />
         <Route path="/services" element={<ServicesSection />} />
         <Route path="/about" element={<About />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </div>
   );

@@ -12,6 +12,7 @@
   "dependencies": {
     "aos": "^2.3.4",
     "aso": "^1.1.1",
+    "axios": "^1.7.9",
     "framer-motion": "^11.5.4",
     "hamburger-react": "^2.5.1",
     "i18next": "^23.14.0",
