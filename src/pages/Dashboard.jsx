@@ -5,10 +5,9 @@ const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
 
 // State Management with useReducer
 const initialState = {
-  admins: [],
-  ships: [],
+  admin: [],
+  ship: [],
   items: [],
-  checkpoints: [],
   loading: false,
   error: null,
 };
@@ -94,6 +93,22 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  //  updateStateEntity
+  const updateStateEntity = async (endpoint, data) => {
+    try {
+      const response = await axios.post(`${API_HOST}${endpoint}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(`state updated successfully!`, response.data);
+      return response; // Return response for further handling
+    } catch (error) {
+      console.error("Error updating entity:", error);
+      throw error; // Propagate error for upstream handling
+    }
+  };
+
   const value = {
     state,
     dispatch,
@@ -101,6 +116,7 @@ const AppProvider = ({ children }) => {
     addEntity,
     deleteEntity,
     updateEntity,
+    updateStateEntity,
   };
   console.log(state);
 
@@ -109,90 +125,127 @@ const AppProvider = ({ children }) => {
 
 const AdminDashboard = () => {
   // lera function kan zia akai bo global krdn
-  const { state, fetchData, addEntity, deleteEntity, updateEntity } =
-    useAppContext();
+  const {
+    state,
+    fetchData,
+    addEntity,
+    deleteEntity,
+    updateEntity,
+    updateStateEntity,
+  } = useAppContext();
   const [activeSection, setActiveSection] = React.useState(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalData, setModalData] = React.useState({});
+  const [shipDetailData, setShipDetailData] = React.useState({});
   const [modalEntity, setModalEntity] = React.useState("");
 
   React.useEffect(() => {
     fetchData("admin", "admin/read.php");
     fetchData("ship", "ship/read.php");
     fetchData("item", "item/read.php");
-    fetchData("checkpoint", "ship_chek_point/read.php");
+    // fetchData("checkpoint", "ship_chek_point/read.php");
   }, []);
 
   // handel card
-  const handleCardClick = (section) => {
+  const handleCardClick = (section, data) => {
+    // katek click lasar card check point akai tanha dw click man haia chun button add+subbmit kai bayakawaya boia abe rastaw xo bi nery bo sar aw function awani tr ba 3 click submit akren boian pewistian ba if ina
+    if (section === "ship_chek_point") {
+      handleModalOpen(section);
+    }
+    // dyary krdni krdnaway kam section awanai xwarawa table kan
     setActiveSection(section);
+    // tanha datay naw detal ship tiaya
+    setShipDetailData(data);
   };
 
   // handel modal
-  // 1. Modify handleModalOpen to handle editing an admin.
-const handleModalOpen = (entity, data) => {
-  setModalEntity(entity);
+  // 1. Modify handleModalOpen to handle editing katek click la sae update akai yan add akai lera datakan la modalData da anret ka dway ai nery bo add+update api.
+  const handleModalOpen = (entity, data) => {
+    setModalEntity(entity);
+    console.log("entity");
+    console.log(activeSection);
 
-  if (entity === "admin") {
-    setModalData({
-      admin_name: "",
-      admin_password: "",
-      admin_phone: "",
-      admin_role: "user",
-    });
-  } else if (entity === "updateAdmin") {
-    setModalData({
-      admin_name: data.admin_name,
-      admin_password: data.admin_password,
-      admin_phone: data.admin_phone,
-      admin_role: data.admin_role,
-      admin_id: data.admin_id, // Pass the ID of the admin for the update
-    });
-  }
-  else if (entity === "ship") {
-    setModalData({
-      ship_code: "",
-      ship_londing_area: "",
-      ship_destination: "",
-      admin_id: 1
-    });
-  }
-  else if (entity === "updateShip") {
-    setModalData({
-      ship_code: data.ship_code,
-      ship_londing_area: data.ship_londing_area,
-      ship_destination: data.ship_destination,
-      ship_id: data.ship_id,
-      admin_id: 1
-    });
-  }
-   else if (entity === "item") {
-    setModalData({
-      ship_id: "",
-      item_mark: "",
-      item_cartonsumber: "",
-      item_cbm: "",
-      item_name: "",
-      item_wieghtumber: "",
-      item_owner_name: "",
-      item_owner_phone: "",
-    });
-  }
-  setIsModalOpen(true);
-};
+    if (entity === "admin") {
+      setModalData({
+        admin_name: "",
+        admin_password: "",
+        admin_phone: "",
+        admin_role: "user",
+      });
+    } else if (entity === "updateAdmin") {
+      setModalData({
+        admin_name: data.admin_name,
+        admin_password: data.admin_password,
+        admin_phone: data.admin_phone,
+        admin_role: data.admin_role,
+        admin_id: data.admin_id, // Pass the ID of the admin for the update
+      });
+    } else if (entity === "ship") {
+      setModalData({
+        ship_code: "",
+        ship_londing_area: "",
+        ship_destination: "",
+        ship_start_date: "",
+        ship_end_date: "",
+        admin_id: 1,
+      });
+    } else if (entity === "updateShip") {
+      setModalData({
+        ship_code: data.ship_code,
+        ship_londing_area: data.ship_londing_area,
+        ship_destination: data.ship_destination,
+        ship_id: data.ship_id,
+        admin_id: 5,
+      });
+    } else if (entity === "item") {
+      setModalData({
+        ship_id: "",
+        item_mark: "",
+        item_cartonsumber: "",
+        item_cbm: "",
+        item_name: "",
+        item_wieghtumber: "",
+        item_owner_name: "",
+        item_owner_phone: "",
+        item_date: "",
+      });
+    } else if (entity === "updateItem") {
+      setModalData({
+        ship_id: data.ship_id,
+        item_mark: data.item_mark,
+        item_cartons: data.item_cartons,
+        item_cbm: data.item_cbm,
+        item_name: data.item_name,
+        item_wieght: data.item_wieght,
+        item_owner_name: data.item_owner_name,
+        item_owner_phone: data.item_owner_phone,
+        item_id: data.item_id,
+      });
+    } else if (entity === "ship_chek_point") {
+      console.log("ship_chek_point");
 
-// 2. Modify the onClick of update button in the admin section to open the modal with data.
-const handleUpdateClick = (title, data) => {
-  if (title === "admin") {
-    handleModalOpen("updateAdmin", data)
-  } 
-  else if(title === "ship"){
-    handleModalOpen("updateShip", data)
-  }
-  else if(title === "item"){
-    handleModalOpen("updateItem", data)
-  }
-};
+      setModalData({
+        admin_id: "1",
+        ship_id: "",
+        ship_chek_point_land_point: "",
+        ship_chek_point_note: "",
+        ship_check_point_date: "",
+      });
+    }
+
+    setIsModalOpen(true);
+  };
+
+  // 2. Modify the onClick of update button bo krdnaway modal aw table ka click la sar update krdwa
+  const handleUpdateClick = (title, data) => {
+    if (title === "admin") {
+      handleModalOpen("updateAdmin", data);
+    } else if (title === "item") {
+      handleModalOpen("updateItem", data);
+    } else if (title === "ship") {
+      handleModalOpen("updateShip", data);
+    }
+  };
 
   //  hendel input
   const handleInputChange = (e) => {
@@ -205,26 +258,49 @@ const handleUpdateClick = (title, data) => {
 
   // handel Submit
   const handleSubmit = async () => {
+    console.log("modalEntity");
+    console.log(modalEntity);
+
     try {
       const endpoint = `${modalEntity}/create.php`;
-  
+
       // Call addEntity to create a new record
       const res = await addEntity(modalEntity, endpoint, modalData);
-  
+
       console.log(`${modalEntity} added successfully:`, res.data);
-  
+
       // Close the modal
       setIsModalOpen(false);
       setModalData({}); // Reset modal data
-  
-      // Refresh the data for the active entity
-      fetchData(modalEntity, `${modalEntity}/read.php`);
+
+      // Refresh the data for the active entity + ship_chek_point read nia bo ya aw marjam danawa
+      {
+        modalEntity === "ship_chek_point"
+          ? ""
+          : fetchData(modalEntity, `${modalEntity}/read.php`);
+      }
     } catch (error) {
       console.error(`Failed to add ${modalEntity}:`, error);
     }
   };
-  
-  
+
+  // handel changen state
+  const handelChangeState = async (data) => {
+    try {
+      const dataUpdate = {
+        ship_id: data.ship_id,
+        ship_state: data.ship_state,
+      };
+      const endpoint = `ship/change_ship_state.php`;
+      await updateStateEntity(endpoint, dataUpdate);
+      console.log("change state updated successfully!");
+
+      // Refresh data
+      fetchData(activeSection, `${activeSection}/read.php`);
+    } catch (error) {
+      console.error(`Failed to chanhe state ${activeSection}:`, error);
+    }
+  };
 
   // handl delete
   const handleDelete = async (item) => {
@@ -243,13 +319,14 @@ const handleUpdateClick = (title, data) => {
 
   // handel update
   const handleUpdate = async (modalEntity, data, entity) => {
-    // modalEntity: bo awai bzanm kam modal update bkretawa kala handelClick diyari akam, 
-    // data: record datakaia, 
+    // modalEntity: bo awai bzanm kam modal update bkretawa kala handelClick diyari akam,
+    // data: record datakaia,
     // entity: bo api kaia ka update la aw endpoint bka
-    console.log(`modal entity: ${modalEntity} - modaldata: ${data} - point ${entity}`);
+    console.log(
+      `modal entity: ${modalEntity} - modaldata: ${data} - point ${entity}`
+    );
     console.log(data);
-    
-    
+
     try {
       if (modalEntity === "updateAdmin") {
         const dataUpdate = {
@@ -260,11 +337,9 @@ const handleUpdateClick = (title, data) => {
           admin_id: data.admin_id,
         };
         const endpoint = `${entity}/update.php`;
-      await updateEntity(entity, endpoint, dataUpdate);
-      console.log("Admin updated successfully!");
-      
-      }
-      else if (modalEntity === "updateShip") {
+        await updateEntity(entity, endpoint, dataUpdate);
+        console.log("Admin updated successfully!");
+      } else if (modalEntity === "updateShip") {
         const dataUpdate = {
           ship_code: data.ship_code,
           ship_londing_area: data.ship_londing_area,
@@ -273,17 +348,32 @@ const handleUpdateClick = (title, data) => {
           admin_id: 1,
         };
         const endpoint = `${entity}/update.php`;
-      await updateEntity(entity, endpoint, dataUpdate);
-      console.log("Admin updated successfully!");
-      }
-     
+        await updateEntity(entity, endpoint, dataUpdate);
+        console.log("Admin updated successfully!");
+      } else if (modalEntity === "updateItem") {
+        console.log("data update");
+        console.log(data);
 
-          // Close the modal
-     setIsModalOpen(false);
+        const dataUpdate = {
+          ship_id: data.ship_id,
+          item_mark: data.item_mark,
+          item_cartons: data.item_cartons,
+          item_cbm: data.item_cbm,
+          item_name: data.item_name,
+          item_wieght: data.item_wieght,
+          item_owner_name: data.item_owner_name,
+          item_owner_phone: data.item_owner_phone,
+          item_id: data.item_id,
+        };
+        const endpoint = `${entity}/update.php`;
+        await updateEntity(entity, endpoint, dataUpdate);
+        console.log("Admin updated successfully!");
+      }
+
+      // Close the modal
+      setIsModalOpen(false);
       // Refresh data after update
       fetchData(entity, `${entity}/read.php`);
-        
-      
     } catch (error) {
       console.error("Failed to update admin:", error);
     }
@@ -306,17 +396,31 @@ const handleUpdateClick = (title, data) => {
             <Card title="Items" onClick={() => handleCardClick("item")} />
             <Card
               title="Checkpoints"
-              onClick={() => handleCardClick("checkpoints")}
+              onClick={() => handleCardClick("ship_chek_point")}
             />
           </div>
           {activeSection && (
             <Section
               title={activeSection}
+              // bo nardni datay aw acticv card ka to click le krdwa
               data={state[activeSection]}
+              // la naw handel modal open setModalEntity ba karde wa modalEntity ba kar de bo krdnaway modala kan ka add u update tia akre
               onAddClick={() => handleModalOpen(activeSection)}
               onDelete={handleDelete}
-              onUpdate={handleUpdate}
+              // bo away bzani kam modal bkaytawa am function
               handleUpdateClick={handleUpdateClick}
+              onShipClick={handleCardClick}
+              // bo change state la table ship
+              onChangeState={handelChangeState}
+              onAddChekPoint={handleSubmit}
+              // tanha datay aw gashta lasary da anre ka click la sar akai
+              shipDetailData={shipDetailData}
+              // bas bo control dataya la naw value
+              modalData={modalData}
+              // bo handel input ba pey naem u chnage
+              onChange={handleInputChange}
+              // bo bashi ship chek point input bo hall pzhardni code gashtaka
+              dataShip={state["ship"]}
             />
           )}
         </div>
@@ -333,6 +437,7 @@ const handleUpdateClick = (title, data) => {
                 Admin Name
               </label>
               <input
+                required
                 type="text"
                 name="admin_name"
                 value={modalData.admin_name || ""}
@@ -346,6 +451,7 @@ const handleUpdateClick = (title, data) => {
                 Admin Password
               </label>
               <input
+                required
                 type="password"
                 name="admin_password"
                 value={modalData.admin_password || ""}
@@ -359,6 +465,7 @@ const handleUpdateClick = (title, data) => {
                 Admin Phone
               </label>
               <input
+                required
                 type="text"
                 name="admin_phone"
                 value={modalData.admin_phone || ""}
@@ -400,71 +507,82 @@ const handleUpdateClick = (title, data) => {
       )}
       {/* Modal update admin */}
       {isModalOpen && modalEntity === "updateAdmin" && (
-  <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h2 className="text-xl font-bold mb-4">Update Admin</h2>
-      {/* Input for admin_name */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Admin Name</label>
-        <input
-          type="text"
-          name="admin_name"
-          value={modalData.admin_name || ""}
-          onChange={handleInputChange}
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-      {/* Input for admin_password */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Admin Password</label>
-        <input
-          type="password"
-          name="admin_password"
-          value={modalData.admin_password || ""}
-          onChange={handleInputChange}
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-      {/* Input for admin_phone */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Admin Phone</label>
-        <input
-          type="text"
-          name="admin_phone"
-          value={modalData.admin_phone || ""}
-          onChange={handleInputChange}
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-      {/* Select for admin_role */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Admin Role</label>
-        <select
-          name="admin_role"
-          value={modalData.admin_role || ""}
-          onChange={handleInputChange}
-          className="w-full border rounded px-3 py-2"
-        >
-          <option value="admin">Admin</option>
-          <option value="user">User</option>
-        </select>
-      </div>
-      <div className="flex justify-end space-x-4">
-        <button
-          className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-          onClick={() => setIsModalOpen(false)}
-        >
-          Cancel
-        </button>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          onClick={()=> handleUpdate(modalEntity,modalData, "admin")} // Use the same submit function to either add or update
-        >
-          Update Admin
-        </button>
-      </div>
-    </div>
-  </div>
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Update Admin</h2>
+            {/* Input for admin_name */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Admin Name
+              </label>
+              <input
+                required
+                type="text"
+                name="admin_name"
+                value={modalData.admin_name || ""}
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            {/* Input for admin_password */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Admin Password
+              </label>
+              <input
+                required
+                type="password"
+                name="admin_password"
+                value={modalData.admin_password || ""}
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            {/* Input for admin_phone */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Admin Phone
+              </label>
+              <input
+                required
+                type="text"
+                name="admin_phone"
+                value={modalData.admin_phone || ""}
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            {/* Select for admin_role */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Admin Role
+              </label>
+              <select
+                name="admin_role"
+                value={modalData.admin_role || ""}
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={() => handleUpdate(modalEntity, modalData, "admin")} // Use the same submit function to either add or update
+              >
+                Update Admin
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* modal for adding new ship */}
@@ -479,6 +597,7 @@ const handleUpdateClick = (title, data) => {
                   Ship Code
                 </label>
                 <input
+                  required
                   type="text"
                   name="ship_code"
                   value={modalData.ship_code || ""}
@@ -492,6 +611,7 @@ const handleUpdateClick = (title, data) => {
                 Loading Area
               </label>
               <input
+                required
                 type="text"
                 name="ship_londing_area"
                 value={modalData.ship_londing_area || ""}
@@ -504,9 +624,34 @@ const handleUpdateClick = (title, data) => {
                 Destination
               </label>
               <input
+                required
                 type="text"
                 name="ship_destination"
                 value={modalData.ship_destination || ""}
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Start Date
+              </label>
+              <input
+                required
+                type="date"
+                name="ship_start_date"
+                value={modalData.ship_start_date || ""}
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">End Date</label>
+              <input
+                required
+                type="date"
+                name="ship_end_date"
+                value={modalData.ship_end_date || ""}
                 onChange={handleInputChange}
                 className="w-full border rounded px-3 py-2"
               />
@@ -545,18 +690,19 @@ const handleUpdateClick = (title, data) => {
           </div>
         </div>
       )}
-      {/* modal for adding new ship */}
+      {/* modal for adding update ship */}
       {isModalOpen && modalEntity === "updateShip" && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
             <div className="mb-4">
-              {/* admin ID (Dropdown) */}
-              <div>
+              {/* ship ID (Dropdown) */}
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
                   Ship Code
                 </label>
                 <input
+                  required
                   type="text"
                   name="ship_code"
                   value={modalData.ship_code || ""}
@@ -570,6 +716,7 @@ const handleUpdateClick = (title, data) => {
                 Loading Area
               </label>
               <input
+                required
                 type="text"
                 name="ship_londing_area"
                 value={modalData.ship_londing_area || ""}
@@ -582,6 +729,7 @@ const handleUpdateClick = (title, data) => {
                 Destination
               </label>
               <input
+                required
                 type="text"
                 name="ship_destination"
                 value={modalData.ship_destination || ""}
@@ -615,7 +763,7 @@ const handleUpdateClick = (title, data) => {
               </button>
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={()=> handleUpdate(modalEntity, modalData, "ship")}
+                onClick={() => handleUpdate(modalEntity, modalData, "ship")}
               >
                 Update Ship
               </button>
@@ -623,7 +771,7 @@ const handleUpdateClick = (title, data) => {
           </div>
         </div>
       )}
-      
+
       {/* Modal for adding new items */}
       {isModalOpen && modalEntity === "item" && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
@@ -636,6 +784,7 @@ const handleUpdateClick = (title, data) => {
                   Ship Code
                 </label>
                 <select
+                  required
                   name="ship_id"
                   value={modalData.ship_id || ""}
                   onChange={handleInputChange}
@@ -656,6 +805,7 @@ const handleUpdateClick = (title, data) => {
                   Item Mark
                 </label>
                 <input
+                  required
                   type="text"
                   name="item_mark"
                   value={modalData.item_mark || ""}
@@ -669,6 +819,7 @@ const handleUpdateClick = (title, data) => {
                   Cartons Number
                 </label>
                 <input
+                  required
                   type="number"
                   name="item_cartons"
                   value={modalData.item_cartons || ""}
@@ -680,6 +831,7 @@ const handleUpdateClick = (title, data) => {
               <div>
                 <label className="block text-sm font-medium mb-2">CBM</label>
                 <input
+                  required
                   type="text"
                   name="item_cbm"
                   value={modalData.item_cbm || ""}
@@ -693,6 +845,7 @@ const handleUpdateClick = (title, data) => {
                   Item Name
                 </label>
                 <input
+                  required
                   type="text"
                   name="item_name"
                   value={modalData.item_name || ""}
@@ -704,6 +857,7 @@ const handleUpdateClick = (title, data) => {
               <div>
                 <label className="block text-sm font-medium mb-2">Weight</label>
                 <input
+                  required
                   type="number"
                   name="item_wieght"
                   value={modalData.item_wieght || ""}
@@ -717,6 +871,7 @@ const handleUpdateClick = (title, data) => {
                   Owner Name
                 </label>
                 <input
+                  required
                   type="text"
                   name="item_owner_name"
                   value={modalData.item_owner_name || ""}
@@ -730,9 +885,21 @@ const handleUpdateClick = (title, data) => {
                   Owner Phone
                 </label>
                 <input
+                  required
                   type="text"
                   name="item_owner_phone"
                   value={modalData.item_owner_phone || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Date</label>
+                <input
+                  required
+                  type="date"
+                  name="item_date"
+                  value={modalData.item_date || ""}
                   onChange={handleInputChange}
                   className="w-full border rounded px-3 py-2"
                 />
@@ -755,14 +922,166 @@ const handleUpdateClick = (title, data) => {
           </div>
         </div>
       )}
-      
+      {/* Modal for adding update items */}
+      {isModalOpen && modalEntity === "updateItem" && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Ship ID (Dropdown) */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Ship Code
+                </label>
+                <select
+                  required
+                  name="ship_id"
+                  value={modalData.ship_id || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                >
+                  <option value="">Select Ship</option>
+                  {state.ship &&
+                    state.ship.map((ship) => (
+                      <option key={ship.ship_id} value={ship.ship_id}>
+                        {ship.ship_code}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              {/* Item Mark */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Item Mark
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="item_mark"
+                  value={modalData.item_mark || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Cartons Number */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Cartons Number
+                </label>
+                <input
+                  required
+                  type="number"
+                  name="item_cartons"
+                  value={modalData.item_cartons || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* CBM */}
+              <div>
+                <label className="block text-sm font-medium mb-2">CBM</label>
+                <input
+                  required
+                  type="text"
+                  name="item_cbm"
+                  value={modalData.item_cbm || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Item Name */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Item Name
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="item_name"
+                  value={modalData.item_name || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Weight */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Weight</label>
+                <input
+                  required
+                  type="number"
+                  name="item_wieght"
+                  value={modalData.item_wieght || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Owner Name */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Owner Name
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="item_owner_name"
+                  value={modalData.item_owner_name || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Owner Phone */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Owner Phone
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="item_owner_phone"
+                  value={modalData.item_owner_phone || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={() => handleUpdate(modalEntity, modalData, "item")}
+              >
+                Update Item
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 // pashan dani table kan
-const Section = ({ title, data, onAddClick, onDelete, handleUpdateClick }) => {
-  if (!Array.isArray(data)) {
+const Section = ({
+  title,
+  data,
+  onAddClick,
+  onDelete,
+  onShipClick,
+  onChangeState,
+  onAddChekPoint,
+  modalData,
+  shipDetailData,
+  onChange,
+  dataShip,
+  handleUpdateClick,
+}) => {
+  // har katek array datan naw + click la sar card chek point nakrabw + click la sar detail hich kashtiak nakrabw aw text swtra pshan dre
+  if (!Array.isArray(data) && title !== "ship_chek_point" && !shipDetailData) {
     return (
       <div className="text-red-500">
         <p>{title}: Data is not an array!</p>
@@ -787,10 +1106,15 @@ const Section = ({ title, data, onAddClick, onDelete, handleUpdateClick }) => {
       case "item":
         return [
           "item_id",
+          "ship_id",
+          "ship_londing_area",
+          "ship_destination",
+          "ship_start_date",
+          "ship_end_date",
           "item_owner_name",
           "item_owner_phone",
           "item_wieght",
-          "ship_id",
+          "ship_chek_point",
           "item_cartons",
           "item_name",
           "item_state",
@@ -805,66 +1129,191 @@ const Section = ({ title, data, onAddClick, onDelete, handleUpdateClick }) => {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4 border-b pb-2">
         {title}
       </h2>
-      {/* Button to open the modal */}
-      <button
-        onClick={onAddClick}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
-      >
-        Add New {title}
-      </button>
-      <div className="overflow-auto">
-        <table className="table-auto w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-              {data.length > 0 &&
-                Object.keys(data[0])
-                  .filter((key) => !excludedFields.includes(key))
-                  .map((key) => (
-                    <th
-                      key={key}
-                      className="border-b px-4 py-2 text-sm text-gray-600"
-                    >
-                      {key}
-                    </th>
-                  ))}
-              <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                Actions
-              </th>
-            </tr>
-          </thead>
 
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                {Object.entries(item)
-                  .filter(([key]) => !excludedFields.includes(key)) // Exclude unwanted fields
-                  .map(([key, value], i) => (
-                    <td
-                      key={i}
-                      className="border-b px-4 py-2 text-sm text-gray-800"
-                    >
-                      {value}
-                    </td>
-                  ))}
-                <td className="border-b px-4 py-2 text-center">
-                  <button
-                    onClick={() => handleUpdateClick(title, item)} // Pass the item for update
-                    className="text-blue-500 hover:underline"
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => onDelete(item)}
-                    className="text-red-500 hover:underline ml-2"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Sadd ship chek point */}
+      {title === "ship_chek_point" ? (
+        <div className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5">
+          <div className="mb-4 w-full">
+            <label className="block text-sm font-medium mb-2">Ship Code</label>
+            <select
+              required
+              name="ship_id"
+              value={modalData.ship_id || ""}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 bg-slate-50"
+            >
+              <option value="">Select Ship</option>
+              {dataShip &&
+                dataShip.map((ship) => (
+                  <option key={ship.ship_id} value={ship.ship_id}>
+                    {ship.ship_code}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="mb-4 w-full">
+            <label className="block text-sm font-medium mb-2">
+              Landing Point
+            </label>
+            <input
+              required
+              type="text"
+              name="ship_chek_point_land_point"
+              value={modalData.ship_chek_point_land_point || ""}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 bg-slate-50"
+            />
+          </div>
+          <div className="mb-4 w-full">
+            <label className="block text-sm font-medium mb-2">Note</label>
+            <input
+              required
+              type="text"
+              name="ship_chek_point_note"
+              value={modalData.ship_chek_point_note || ""}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 bg-slate-50"
+            />
+          </div>
+          <div className="mb-4 w-full">
+            <label className="block text-sm font-medium mb-2">Date</label>
+            <input
+              required
+              type="date"
+              name="ship_check_point_date"
+              value={modalData.ship_check_point_date || ""}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 bg-slate-50"
+            />
+          </div>
+          <div className=" place-self-center w-full mt-4">
+         
+            <button
+              className="bg-blue-500 text-white px-4 py-2 w-full lg:w-fit  rounded hover:bg-blue-600"
+              onClick={onAddChekPoint}
+            >
+              Add Landing Point
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {title !== "shipDetail" ? (
+            <>
+              <button
+                onClick={onAddClick}
+                className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
+              >
+                Add New {title}
+              </button>
+              <div className="overflow-auto">
+                <table className="table-auto w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      {data.length > 0 &&
+                        Object.keys(data[0])
+                          .filter((key) => !excludedFields.includes(key))
+                          .map((key) => (
+                            <th
+                              key={key}
+                              className="border-b px-4 py-2 text-sm text-gray-600"
+                            >
+                              {key}
+                            </th>
+                          ))}
+                      {data.length > 0 && (
+                        <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                          Actions
+                        </th>
+                      )}
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {data.map((item, index) => (
+                      <tr key={index} className="hover:bg-gray-100">
+                        {Object.entries(item)
+                          .filter(([key]) => !excludedFields.includes(key)) // Exclude unwanted fields
+                          .map(([key, value], i) => (
+                            <td
+                              onClick={() =>
+                                title === "ship"
+                                  ? onShipClick("shipDetail", item)
+                                  : ""
+                              }
+                              key={i}
+                              className="border-b px-4 py-2 text-sm text-gray-800"
+                            >
+                              {value}
+                            </td>
+                          ))}
+                        <td className="border-b px-4 py-2 text-center">
+                          <button
+                            onClick={() => handleUpdateClick(title, item)} // Pass the item for update
+                            className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => onDelete(item)}
+                            className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
+                          >
+                            Delete
+                          </button>
+                          {title === "ship" ? (
+                            <button
+                              onClick={() => onChangeState(item)}
+                              className="text-green-500 hover:underline ml-2 border-green-400 border rounded px-1"
+                            >
+                              state
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <>
+              <table className="table-auto w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                      item_mark
+                    </th>
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                      item_cartons
+                    </th>
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                      item_cbm
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {shipDetailData.ship_item &&
+                    shipDetailData.ship_item.map((item, index) => (
+                      <tr key={index} className="bg-gray-100 text-black">
+                        <td className="border px-4 py-2 text-center">
+                          {item.item_mark}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {item.item_cartons}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {item.item_cbm}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 };
