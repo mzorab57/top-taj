@@ -1279,6 +1279,43 @@ const Section = ({
             </>
           ) : (
             <>
+             <table className="table-auto w-full text-left border-collapse my-7">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                    ship_code
+                    </th>
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                    ship_chek_point_land_point
+                    </th>
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                    ship_check_point_date
+                    </th>
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                    ship_chek_point_note
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {shipDetailData.ship_chek_point &&
+                    shipDetailData.ship_chek_point.map((item, index) => (
+                      <tr key={index} className="bg-gray-100 text-black">
+                        <td className="border px-4 py-2 text-center">
+                          {item.ship_code}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {item.ship_chek_point_land_point}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {item.ship_check_point_date}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {item.ship_chek_point_note}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
               <table className="table-auto w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-200">
