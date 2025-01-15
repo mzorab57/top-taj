@@ -37,6 +37,8 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const fetchData = async (entity, endpoint) => {
+    console.log(`fech entity ${entity} endpoint ${endpoint}`);
+    
     dispatch({ type: "LOADING" });
     try {
       const response = await axios.get(`${API_HOST}${endpoint}`);
@@ -221,9 +223,9 @@ const AdminDashboard = () => {
         item_owner_phone: data.item_owner_phone,
         item_id: data.item_id,
       });
-    } else if (entity === "ship_chek_point") {
+    } 
+    else if (entity === "ship_chek_point") {
       console.log("ship_chek_point");
-
       setModalData({
         admin_id: "1",
         ship_id: "",
@@ -232,7 +234,16 @@ const AdminDashboard = () => {
         ship_check_point_date: "",
       });
     }
-
+    else if (entity === "updateship_chek_point") {
+      console.log(" update ship_chek_point");
+      setModalData({
+        admin_id: "1",
+        ship_id: data.ship_id,
+        ship_chek_point_land_point: data.ship_chek_point_land_point,
+        ship_chek_point_note: data.ship_chek_point_note,
+        ship_chek_point_id: data.ship_chek_point_id,
+      });
+    }
     setIsModalOpen(true);
   };
 
@@ -242,8 +253,12 @@ const AdminDashboard = () => {
       handleModalOpen("updateAdmin", data);
     } else if (title === "item") {
       handleModalOpen("updateItem", data);
-    } else if (title === "ship") {
+    } 
+    else if (title === "ship") {
       handleModalOpen("updateShip", data);
+    }
+    else if (title === "shipDetail") {
+      handleModalOpen("updateship_chek_point", data);
     }
   };
 
@@ -276,7 +291,7 @@ const AdminDashboard = () => {
       // Refresh the data for the active entity + ship_chek_point read nia bo ya aw marjam danawa
       {
         modalEntity === "ship_chek_point"
-          ? ""
+          ?  fetchData("ship", `ship/read.php`)
           : fetchData(modalEntity, `${modalEntity}/read.php`);
       }
     } catch (error) {
@@ -304,7 +319,18 @@ const AdminDashboard = () => {
 
   // handl delete
   const handleDelete = async (item) => {
+    
     try {
+      if (activeSection === "shipDetail") {
+        const entityEndpoint = `ship_chek_point/delete.php`; // Construct endpoint
+        const idKey = `ship_chek_point_id`; // Determine the ID key dynamically
+        await deleteEntity("ship_chek_point" , entityEndpoint, idKey, item[idKey]);
+        console.log(`${"ship_chek_point" } deleted successfully!`);
+  
+        // Refresh data
+        fetchData("item" , `item/read.php`);
+        fetchData("ship" , `ship/read.php`);
+      } else{
       const entityEndpoint = `${activeSection}/delete.php`; // Construct endpoint
       const idKey = `${activeSection}_id`; // Determine the ID key dynamically
       await deleteEntity(activeSection, entityEndpoint, idKey, item[idKey]);
@@ -312,6 +338,7 @@ const AdminDashboard = () => {
 
       // Refresh data
       fetchData(activeSection, `${activeSection}/read.php`);
+      }
     } catch (error) {
       console.error(`Failed to delete ${activeSection}:`, error);
     }
@@ -349,7 +376,7 @@ const AdminDashboard = () => {
         };
         const endpoint = `${entity}/update.php`;
         await updateEntity(entity, endpoint, dataUpdate);
-        console.log("Admin updated successfully!");
+        console.log("ship updated successfully!");
       } else if (modalEntity === "updateItem") {
         console.log("data update");
         console.log(data);
@@ -367,7 +394,20 @@ const AdminDashboard = () => {
         };
         const endpoint = `${entity}/update.php`;
         await updateEntity(entity, endpoint, dataUpdate);
-        console.log("Admin updated successfully!");
+        console.log("item updated successfully!");
+      }
+       else if (modalEntity === "updateship_chek_point") {
+        console.log(" update ship_chek_point");
+        const dataUpdate ={
+          admin_id: "1",
+          ship_id: data.ship_id,
+          ship_chek_point_land_point: data.ship_chek_point_land_point,
+          ship_chek_point_note: data.ship_chek_point_note,
+          ship_chek_point_id: data.ship_chek_point_id,
+        };
+        const endpoint = `${entity}/update.php`;
+        await updateEntity(entity, endpoint, dataUpdate);
+        console.log("ship chek point updated successfully!");
       }
 
       // Close the modal
@@ -1061,6 +1101,54 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+      {/* Modal for adding update items */}
+      {isModalOpen && modalEntity === "updateship_chek_point" && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+            <div className="grid gap-4">
+            <div className="mb-4 w-full">
+            <label className="block text-sm font-medium mb-2">
+              Landing Point
+            </label>
+            <input
+              required
+              type="text"
+              name="ship_chek_point_land_point"
+              value={modalData.ship_chek_point_land_point || ""}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2 bg-slate-50"
+            />
+          </div>
+          <div className="mb-4 w-full">
+            <label className="block text-sm font-medium mb-2">Note</label>
+            <input
+              required
+              type="text"
+              name="ship_chek_point_note"
+              value={modalData.ship_chek_point_note || ""}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2 bg-slate-50"
+            />
+          </div>
+            </div>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={() => handleUpdate(modalEntity, modalData, "ship_chek_point")}
+              >
+                Update Chek Point
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -1130,7 +1218,7 @@ const Section = ({
         {title}
       </h2>
 
-      {/* Sadd ship chek point */}
+      {/* Add ship chek point */}
       {title === "ship_chek_point" ? (
         <div className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5">
           <div className="mb-4 w-full">
@@ -1278,8 +1366,9 @@ const Section = ({
               </div>
             </>
           ) : (
-            <>
-             <table className="table-auto w-full text-left border-collapse my-7">
+            <div className="overflow-x-auto">
+            <h1 className="font-inter text-3xl">Ship land Point</h1>
+             <table className="  w-full text-left border-collapse my-7">
                 <thead>
                   <tr className="bg-gray-200">
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
@@ -1294,60 +1383,110 @@ const Section = ({
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
                     ship_chek_point_note
                     </th>
+                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+                    Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {shipDetailData.ship_chek_point &&
                     shipDetailData.ship_chek_point.map((item, index) => (
-                      <tr key={index} className="bg-gray-100 text-black">
-                        <td className="border px-4 py-2 text-center">
+                      <tr key={index} className="border-b text-black">
+                        <td className=" px-4 py-2 text-center">
                           {item.ship_code}
                         </td>
-                        <td className="border px-4 py-2 text-center">
+                        <td className=" px-4 py-2 text-center">
                           {item.ship_chek_point_land_point}
                         </td>
-                        <td className="border px-4 py-2 text-center">
+                        <td className=" px-4 py-2 text-center">
                           {item.ship_check_point_date}
                         </td>
-                        <td className="border px-4 py-2 text-center">
+                        <td className=" px-4 py-2 text-center">
                           {item.ship_chek_point_note}
+                        </td>
+                        <td className=" px-4 py-2 text-center">
+                          <button
+                            onClick={() => handleUpdateClick(title, item)} // Pass the item for update
+                            className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => onDelete(item)}
+                            className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
+                          >
+                            Delete
+                          </button>
+                         
                         </td>
                       </tr>
                     ))}
                 </tbody>
               </table>
-              <table className="table-auto w-full text-left border-collapse">
+              {/*  Ship item */}
+              <h1 className="font-inter text-3xl my-3">Ship Item</h1>
+              <table className=" w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      item_mark
+                  <tr className=" border-b bg-gray-200">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                      Shing Mark
                     </th>
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      item_cartons
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                       cartons
                     </th>
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      item_cbm
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                       cbm
+                    </th>
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    item name
+                    </th>
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                     wieght
+                    </th>
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    customer name
+                    </th>
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    customer contact Number
+                    </th>
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    date
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {shipDetailData.ship_item &&
                     shipDetailData.ship_item.map((item, index) => (
-                      <tr key={index} className="bg-gray-100 text-black">
-                        <td className="border px-4 py-2 text-center">
+                      <tr key={index} className="border-b text-black">
+                        <td className=" px-4 py-2 text-center">
                           {item.item_mark}
                         </td>
-                        <td className="border px-4 py-2 text-center">
+                        <td className=" px-4 py-2 text-center">
                           {item.item_cartons}
                         </td>
-                        <td className="border px-4 py-2 text-center">
-                          {item.item_cbm}
+                        <td className=" px-4 py-2 text-center relative">
+                          {item.item_cbm} m <span className="absolute top-2 rotate-0 text-xs">3</span>
+                        </td>
+                        <td className=" px-4 py-2 text-center">
+                          {item.item_name}
+                        </td>
+                        <td className=" px-4 py-2 text-center">
+                          {item.item_wieght} kg
+                        </td>
+                        <td className=" px-4 py-2 text-center">
+                          {item.item_owner_name}
+                        </td>
+                        <td className=" px-4 py-2 text-center">
+                          {item.item_owner_phone}
+                        </td>
+                        <td className=" px-4 py-2 text-center">
+                          {item.item_date}
                         </td>
                       </tr>
                     ))}
                 </tbody>
               </table>
-            </>
+            </div>
           )}
         </>
       )}

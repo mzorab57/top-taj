@@ -6,7 +6,7 @@ import MobileMenu from "./MobileMenu";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { CiLocationOn } from "react-icons/ci";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link, useLocation } from "react-router-dom"; // Import Link from react-router-dom
 import LanguageSwitcher from "../component/LanguageSwitcher";
 import { useTranslation } from "react-i18next"; // Import the useTranslation hook
 
@@ -15,6 +15,8 @@ const Navbar = () => {
   const [color, setColor] = useState(false);
   const [isOpenMenu, setOpenMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,10 +47,10 @@ const Navbar = () => {
   };
 
   return (
-    <div className={`Navbar fixed top-0  z-50 w-full tracking-widest`}>
+    <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
       {/* Main Navbar */}
       <div
-        className={` flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full   `}
+        className={`${location.pathname === '/dashboard' ? 'hidden': 'flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full '}   `}
       >
         {/* top */}
         <div

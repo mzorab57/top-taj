@@ -7,6 +7,7 @@ import Work from "../component/Work";
 import ServicesSection from "../pages/ServicesSection";
 import About from "../pages/About";
 import Dashboard from "../pages/Dashboard";
+import ShipmentTracker  from "../pages/ShipmentTracker";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
         <Route path="/services" element={<ServicesSection />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/tracking" element={<ShipmentTracker  />} />
       </Routes>
     </div>
   );

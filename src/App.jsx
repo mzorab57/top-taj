@@ -8,7 +8,7 @@ import AppRoutes from "./routes/AppRoute";
 function App() {
   return (
     <Router>
-      {/* <Navbar /> */}
+      <Navbar />
       <AppRoutes  />
       <Footer />
     </Router>
