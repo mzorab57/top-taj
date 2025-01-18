@@ -50,7 +50,7 @@ const Navbar = () => {
     <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
       {/* Main Navbar */}
       <div
-        className={`${location.pathname === '/dashboard' ? 'hidden': 'flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full '}   `}
+        className={`${location.pathname === '/dashboard' || location.pathname === '/tracking' ? 'hidden': 'flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full '}   `}
       >
         {/* top */}
         <div

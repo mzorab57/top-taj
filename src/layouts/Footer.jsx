@@ -29,7 +29,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
             {/* About Widget */}
             <div className="space-y-4">
-              <a href="index.html">
+              <a href="/">
                 <img
                   src={topTajLogo}
                   alt="Footer Logo"

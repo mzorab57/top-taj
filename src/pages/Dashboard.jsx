@@ -1,5 +1,7 @@
 import React, { useReducer, useContext, createContext } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import ShipmentTracker from "./Tracking";
 
 const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
 
@@ -38,7 +40,7 @@ const AppProvider = ({ children }) => {
 
   const fetchData = async (entity, endpoint) => {
     console.log(`fech entity ${entity} endpoint ${endpoint}`);
-    
+
     dispatch({ type: "LOADING" });
     try {
       const response = await axios.get(`${API_HOST}${endpoint}`);
@@ -135,6 +137,8 @@ const AdminDashboard = () => {
     updateEntity,
     updateStateEntity,
   } = useAppContext();
+  const location = useLocation().pathname;
+
   const [activeSection, setActiveSection] = React.useState(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalData, setModalData] = React.useState({});
@@ -223,8 +227,7 @@ const AdminDashboard = () => {
         item_owner_phone: data.item_owner_phone,
         item_id: data.item_id,
       });
-    } 
-    else if (entity === "ship_chek_point") {
+    } else if (entity === "ship_chek_point") {
       console.log("ship_chek_point");
       setModalData({
         admin_id: "1",
@@ -233,8 +236,7 @@ const AdminDashboard = () => {
         ship_chek_point_note: "",
         ship_check_point_date: "",
       });
-    }
-    else if (entity === "updateship_chek_point") {
+    } else if (entity === "updateship_chek_point") {
       console.log(" update ship_chek_point");
       setModalData({
         admin_id: "1",
@@ -253,11 +255,9 @@ const AdminDashboard = () => {
       handleModalOpen("updateAdmin", data);
     } else if (title === "item") {
       handleModalOpen("updateItem", data);
-    } 
-    else if (title === "ship") {
+    } else if (title === "ship") {
       handleModalOpen("updateShip", data);
-    }
-    else if (title === "shipDetail") {
+    } else if (title === "shipDetail") {
       handleModalOpen("updateship_chek_point", data);
     }
   };
@@ -291,7 +291,7 @@ const AdminDashboard = () => {
       // Refresh the data for the active entity + ship_chek_point read nia bo ya aw marjam danawa
       {
         modalEntity === "ship_chek_point"
-          ?  fetchData("ship", `ship/read.php`)
+          ? fetchData("ship", `ship/read.php`)
           : fetchData(modalEntity, `${modalEntity}/read.php`);
       }
     } catch (error) {
@@ -319,25 +319,29 @@ const AdminDashboard = () => {
 
   // handl delete
   const handleDelete = async (item) => {
-    
     try {
       if (activeSection === "shipDetail") {
         const entityEndpoint = `ship_chek_point/delete.php`; // Construct endpoint
         const idKey = `ship_chek_point_id`; // Determine the ID key dynamically
-        await deleteEntity("ship_chek_point" , entityEndpoint, idKey, item[idKey]);
-        console.log(`${"ship_chek_point" } deleted successfully!`);
-  
-        // Refresh data
-        fetchData("item" , `item/read.php`);
-        fetchData("ship" , `ship/read.php`);
-      } else{
-      const entityEndpoint = `${activeSection}/delete.php`; // Construct endpoint
-      const idKey = `${activeSection}_id`; // Determine the ID key dynamically
-      await deleteEntity(activeSection, entityEndpoint, idKey, item[idKey]);
-      console.log(`${activeSection} deleted successfully!`);
+        await deleteEntity(
+          "ship_chek_point",
+          entityEndpoint,
+          idKey,
+          item[idKey]
+        );
+        console.log(`${"ship_chek_point"} deleted successfully!`);
 
-      // Refresh data
-      fetchData(activeSection, `${activeSection}/read.php`);
+        // Refresh data
+        fetchData("item", `item/read.php`);
+        fetchData("ship", `ship/read.php`);
+      } else {
+        const entityEndpoint = `${activeSection}/delete.php`; // Construct endpoint
+        const idKey = `${activeSection}_id`; // Determine the ID key dynamically
+        await deleteEntity(activeSection, entityEndpoint, idKey, item[idKey]);
+        console.log(`${activeSection} deleted successfully!`);
+
+        // Refresh data
+        fetchData(activeSection, `${activeSection}/read.php`);
       }
     } catch (error) {
       console.error(`Failed to delete ${activeSection}:`, error);
@@ -395,10 +399,9 @@ const AdminDashboard = () => {
         const endpoint = `${entity}/update.php`;
         await updateEntity(entity, endpoint, dataUpdate);
         console.log("item updated successfully!");
-      }
-       else if (modalEntity === "updateship_chek_point") {
+      } else if (modalEntity === "updateship_chek_point") {
         console.log(" update ship_chek_point");
-        const dataUpdate ={
+        const dataUpdate = {
           admin_id: "1",
           ship_id: data.ship_id,
           ship_chek_point_land_point: data.ship_chek_point_land_point,
@@ -418,285 +421,301 @@ const AdminDashboard = () => {
       console.error("Failed to update admin:", error);
     }
   };
+  console.log("shipment");
+  // console.log(fetchData("ship", "ship/read.php"););
 
+  //  pahsn dani dashbord
   return (
-    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-extrabold text-center text-blue-600 mb-8">
-        Admin Dashboard
-      </h1>
-      {state.loading ? (
-        <p className="text-center text-lg text-gray-500">Loading...</p>
-      ) : state.error ? (
-        <p className="text-center text-lg text-red-500">Error: {state.error}</p>
-      ) : (
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card title="Admins" onClick={() => handleCardClick("admin")} />
-            <Card title="Ships" onClick={() => handleCardClick("ship")} />
-            <Card title="Items" onClick={() => handleCardClick("item")} />
-            <Card
-              title="Checkpoints"
-              onClick={() => handleCardClick("ship_chek_point")}
-            />
-          </div>
-          {activeSection && (
-            <Section
-              title={activeSection}
-              // bo nardni datay aw acticv card ka to click le krdwa
-              data={state[activeSection]}
-              // la naw handel modal open setModalEntity ba karde wa modalEntity ba kar de bo krdnaway modala kan ka add u update tia akre
-              onAddClick={() => handleModalOpen(activeSection)}
-              onDelete={handleDelete}
-              // bo away bzani kam modal bkaytawa am function
-              handleUpdateClick={handleUpdateClick}
-              onShipClick={handleCardClick}
-              // bo change state la table ship
-              onChangeState={handelChangeState}
-              onAddChekPoint={handleSubmit}
-              // tanha datay aw gashta lasary da anre ka click la sar akai
-              shipDetailData={shipDetailData}
-              // bas bo control dataya la naw value
-              modalData={modalData}
-              // bo handel input ba pey naem u chnage
-              onChange={handleInputChange}
-              // bo bashi ship chek point input bo hall pzhardni code gashtaka
-              dataShip={state["ship"]}
-            />
-          )}
-        </div>
-      )}
+    <>
+      {location === "/tracking" ? <ShipmentTracker /> : ""}
 
-      {/* Modal for adding new admin */}
-      {isModalOpen && modalEntity === "admin" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Admin</h2>
-            {/* Input for admin_name */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Name
-              </label>
-              <input
-                required
-                type="text"
-                name="admin_name"
-                value={modalData.admin_name || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
+      <div
+        className={`${
+          location === "/tracking"
+            ? "hidden"
+            : "container mx-auto p-4 bg-gray-100 min-h-screen "
+        } `}
+      >
+        <h1 className="text-4xl font-extrabold text-center text-blue-600 mb-8">
+          Admin Dashboard
+        </h1>
+        {state.loading ? (
+          <p className="text-center text-lg text-gray-500">Loading...</p>
+        ) : state.error ? (
+          <p className="text-center text-lg text-red-500">
+            Error: {state.error}
+          </p>
+        ) : (
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <Card title="Admins" onClick={() => handleCardClick("admin")} />
+              <Card title="Ships" onClick={() => handleCardClick("ship")} />
+              <Card title="Items" onClick={() => handleCardClick("item")} />
+              <Card
+                title="Checkpoints"
+                onClick={() => handleCardClick("ship_chek_point")}
               />
             </div>
-            {/* Input for admin_password */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Password
-              </label>
-              <input
-                required
-                type="password"
-                name="admin_password"
-                value={modalData.admin_password || ""}
+            {activeSection && (
+              <Section
+                title={activeSection}
+                // bo nardni datay aw acticv card ka to click le krdwa
+                data={state[activeSection]}
+                // la naw handel modal open setModalEntity ba karde wa modalEntity ba kar de bo krdnaway modala kan ka add u update tia akre
+                onAddClick={() => handleModalOpen(activeSection)}
+                onDelete={handleDelete}
+                // bo away bzani kam modal bkaytawa am function
+                handleUpdateClick={handleUpdateClick}
+                onShipClick={handleCardClick}
+                // bo change state la table ship
+                onChangeState={handelChangeState}
+                onAddChekPoint={handleSubmit}
+                // tanha datay aw gashta lasary da anre ka click la sar akai
+                shipDetailData={shipDetailData}
+                // bas bo control dataya la naw value
+                modalData={modalData}
+                // bo handel input ba pey naem u chnage
                 onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
+                // bo bashi ship chek point input bo hall pzhardni code gashtaka
+                dataShip={state["ship"]}
               />
-            </div>
-            {/* Input for admin_phone */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Phone
-              </label>
-              <input
-                required
-                type="text"
-                name="admin_phone"
-                value={modalData.admin_phone || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            {/* Select for admin_role */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Role
-              </label>
-              <select
-                name="admin_role"
-                value={modalData.admin_role || "user"}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-            </div>
-            <div className="flex justify-end space-x-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={handleSubmit}
-              >
-                Add Admin
-              </button>
-            </div>
+            )}
           </div>
-        </div>
-      )}
-      {/* Modal update admin */}
-      {isModalOpen && modalEntity === "updateAdmin" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Update Admin</h2>
-            {/* Input for admin_name */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Name
-              </label>
-              <input
-                required
-                type="text"
-                name="admin_name"
-                value={modalData.admin_name || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            {/* Input for admin_password */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Password
-              </label>
-              <input
-                required
-                type="password"
-                name="admin_password"
-                value={modalData.admin_password || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            {/* Input for admin_phone */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Phone
-              </label>
-              <input
-                required
-                type="text"
-                name="admin_phone"
-                value={modalData.admin_phone || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            {/* Select for admin_role */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Admin Role
-              </label>
-              <select
-                name="admin_role"
-                value={modalData.admin_role || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-            </div>
-            <div className="flex justify-end space-x-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={() => handleUpdate(modalEntity, modalData, "admin")} // Use the same submit function to either add or update
-              >
-                Update Admin
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* modal for adding new ship */}
-      {isModalOpen && modalEntity === "ship" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
-            <div className="mb-4">
-              {/* admin ID (Dropdown) */}
-              <div>
+        {/* Modal for adding new admin */}
+        {isModalOpen && modalEntity === "admin" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-xl font-bold mb-4">Add New Admin</h2>
+              {/* Input for admin_name */}
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Ship Code
+                  Admin Name
                 </label>
                 <input
                   required
                   type="text"
-                  name="ship_code"
-                  value={modalData.ship_code || ""}
+                  name="admin_name"
+                  value={modalData.admin_name || ""}
                   onChange={handleInputChange}
                   className="w-full border rounded px-3 py-2"
                 />
               </div>
+              {/* Input for admin_password */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Password
+                </label>
+                <input
+                  required
+                  type="password"
+                  name="admin_password"
+                  value={modalData.admin_password || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Input for admin_phone */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Phone
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="admin_phone"
+                  value={modalData.admin_phone || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Select for admin_role */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Role
+                </label>
+                <select
+                  name="admin_role"
+                  value={modalData.admin_role || "user"}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={handleSubmit}
+                >
+                  Add Admin
+                </button>
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Loading Area
-              </label>
-              <input
-                required
-                type="text"
-                name="ship_londing_area"
-                value={modalData.ship_londing_area || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
+          </div>
+        )}
+        {/* Modal update admin */}
+        {isModalOpen && modalEntity === "updateAdmin" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-xl font-bold mb-4">Update Admin</h2>
+              {/* Input for admin_name */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Name
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="admin_name"
+                  value={modalData.admin_name || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Input for admin_password */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Password
+                </label>
+                <input
+                  required
+                  type="password"
+                  name="admin_password"
+                  value={modalData.admin_password || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Input for admin_phone */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Phone
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="admin_phone"
+                  value={modalData.admin_phone || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* Select for admin_role */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Admin Role
+                </label>
+                <select
+                  name="admin_role"
+                  value={modalData.admin_role || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() => handleUpdate(modalEntity, modalData, "admin")} // Use the same submit function to either add or update
+                >
+                  Update Admin
+                </button>
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Destination
-              </label>
-              <input
-                required
-                type="text"
-                name="ship_destination"
-                value={modalData.ship_destination || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Start Date
-              </label>
-              <input
-                required
-                type="date"
-                name="ship_start_date"
-                value={modalData.ship_start_date || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">End Date</label>
-              <input
-                required
-                type="date"
-                name="ship_end_date"
-                value={modalData.ship_end_date || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            {/* <div className="mb-4">
+          </div>
+        )}
+
+        {/* modal for adding new ship */}
+        {isModalOpen && modalEntity === "ship" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
+              <div className="mb-4">
+                {/* admin ID (Dropdown) */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Ship Code
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="ship_code"
+                    value={modalData.ship_code || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Loading Area
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="ship_londing_area"
+                  value={modalData.ship_londing_area || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Destination
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="ship_destination"
+                  value={modalData.ship_destination || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Start Date
+                </label>
+                <input
+                  required
+                  type="date"
+                  name="ship_start_date"
+                  value={modalData.ship_start_date || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  End Date
+                </label>
+                <input
+                  required
+                  type="date"
+                  name="ship_end_date"
+                  value={modalData.ship_end_date || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Admin Name</label>
               <select
                 name="admin_id"
@@ -713,71 +732,71 @@ const AdminDashboard = () => {
                   ))}
               </select>
             </div> */}
-            <div className="flex justify-end space-x-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={handleSubmit}
-              >
-                Add Ship
-              </button>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={handleSubmit}
+                >
+                  Add Ship
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      {/* modal for adding update ship */}
-      {isModalOpen && modalEntity === "updateShip" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
-            <div className="mb-4">
-              {/* ship ID (Dropdown) */}
+        )}
+        {/* modal for adding update ship */}
+        {isModalOpen && modalEntity === "updateShip" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
+              <div className="mb-4">
+                {/* ship ID (Dropdown) */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">
+                    Ship Code
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="ship_code"
+                    value={modalData.ship_code || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Ship Code
+                  Loading Area
                 </label>
                 <input
                   required
                   type="text"
-                  name="ship_code"
-                  value={modalData.ship_code || ""}
+                  name="ship_londing_area"
+                  value={modalData.ship_londing_area || ""}
                   onChange={handleInputChange}
                   className="w-full border rounded px-3 py-2"
                 />
               </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Loading Area
-              </label>
-              <input
-                required
-                type="text"
-                name="ship_londing_area"
-                value={modalData.ship_londing_area || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Destination
-              </label>
-              <input
-                required
-                type="text"
-                name="ship_destination"
-                value={modalData.ship_destination || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-            {/* <div className="mb-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Destination
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="ship_destination"
+                  value={modalData.ship_destination || ""}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              {/* <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Ship Code</label>
               <select
                 name="ship_id"
@@ -794,362 +813,369 @@ const AdminDashboard = () => {
                   ))}
               </select>
             </div> */}
-            <div className="flex justify-end space-x-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={() => handleUpdate(modalEntity, modalData, "ship")}
-              >
-                Update Ship
-              </button>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() => handleUpdate(modalEntity, modalData, "ship")}
+                >
+                  Update Ship
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Modal for adding new items */}
-      {isModalOpen && modalEntity === "item" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
-            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {/* Ship ID (Dropdown) */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Ship Code
-                </label>
-                <select
-                  required
-                  name="ship_id"
-                  value={modalData.ship_id || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
+        {/* Modal for adding new items */}
+        {isModalOpen && modalEntity === "item" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+              <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Ship ID (Dropdown) */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Ship Code
+                  </label>
+                  <select
+                    required
+                    name="ship_id"
+                    value={modalData.ship_id || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="">Select Ship</option>
+                    {state.ship &&
+                      state.ship.map((ship) => (
+                        <option key={ship.ship_id} value={ship.ship_id}>
+                          {ship.ship_code}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                {/* Item Mark */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Item Mark
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_mark"
+                    value={modalData.item_mark || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Cartons Number */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Cartons Number
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    name="item_cartons"
+                    value={modalData.item_cartons || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* CBM */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">CBM</label>
+                  <input
+                    required
+                    type="text"
+                    name="item_cbm"
+                    value={modalData.item_cbm || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Item Name */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Item Name
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_name"
+                    value={modalData.item_name || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Weight */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Weight
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    name="item_wieght"
+                    value={modalData.item_wieght || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Owner Name */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Owner Name
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_owner_name"
+                    value={modalData.item_owner_name || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Owner Phone */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Owner Phone
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_owner_phone"
+                    value={modalData.item_owner_phone || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date</label>
+                  <input
+                    required
+                    type="date"
+                    name="item_date"
+                    value={modalData.item_date || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-4 mt-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
                 >
-                  <option value="">Select Ship</option>
-                  {state.ship &&
-                    state.ship.map((ship) => (
-                      <option key={ship.ship_id} value={ship.ship_id}>
-                        {ship.ship_code}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              {/* Item Mark */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Item Mark
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_mark"
-                  value={modalData.item_mark || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Cartons Number */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Cartons Number
-                </label>
-                <input
-                  required
-                  type="number"
-                  name="item_cartons"
-                  value={modalData.item_cartons || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* CBM */}
-              <div>
-                <label className="block text-sm font-medium mb-2">CBM</label>
-                <input
-                  required
-                  type="text"
-                  name="item_cbm"
-                  value={modalData.item_cbm || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Item Name */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Item Name
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_name"
-                  value={modalData.item_name || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Weight */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Weight</label>
-                <input
-                  required
-                  type="number"
-                  name="item_wieght"
-                  value={modalData.item_wieght || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Owner Name */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Owner Name
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_owner_name"
-                  value={modalData.item_owner_name || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Owner Phone */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Owner Phone
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_owner_phone"
-                  value={modalData.item_owner_phone || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Date</label>
-                <input
-                  required
-                  type="date"
-                  name="item_date"
-                  value={modalData.item_date || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end space-x-4 mt-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={handleSubmit}
-              >
-                Add Item
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* Modal for adding update items */}
-      {isModalOpen && modalEntity === "updateItem" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
-            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {/* Ship ID (Dropdown) */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Ship Code
-                </label>
-                <select
-                  required
-                  name="ship_id"
-                  value={modalData.ship_id || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={handleSubmit}
                 >
-                  <option value="">Select Ship</option>
-                  {state.ship &&
-                    state.ship.map((ship) => (
-                      <option key={ship.ship_id} value={ship.ship_id}>
-                        {ship.ship_code}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              {/* Item Mark */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Item Mark
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_mark"
-                  value={modalData.item_mark || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Cartons Number */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Cartons Number
-                </label>
-                <input
-                  required
-                  type="number"
-                  name="item_cartons"
-                  value={modalData.item_cartons || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* CBM */}
-              <div>
-                <label className="block text-sm font-medium mb-2">CBM</label>
-                <input
-                  required
-                  type="text"
-                  name="item_cbm"
-                  value={modalData.item_cbm || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Item Name */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Item Name
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_name"
-                  value={modalData.item_name || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Weight */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Weight</label>
-                <input
-                  required
-                  type="number"
-                  name="item_wieght"
-                  value={modalData.item_wieght || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Owner Name */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Owner Name
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_owner_name"
-                  value={modalData.item_owner_name || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Owner Phone */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Owner Phone
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="item_owner_phone"
-                  value={modalData.item_owner_phone || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
+                  Add Item
+                </button>
               </div>
             </div>
-            <div className="flex justify-end space-x-4 mt-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={() => handleUpdate(modalEntity, modalData, "item")}
-              >
-                Update Item
-              </button>
+          </div>
+        )}
+        {/* Modal for adding update items */}
+        {isModalOpen && modalEntity === "updateItem" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+              <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Ship ID (Dropdown) */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Ship Code
+                  </label>
+                  <select
+                    required
+                    name="ship_id"
+                    value={modalData.ship_id || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="">Select Ship</option>
+                    {state.ship &&
+                      state.ship.map((ship) => (
+                        <option key={ship.ship_id} value={ship.ship_id}>
+                          {ship.ship_code}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                {/* Item Mark */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Item Mark
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_mark"
+                    value={modalData.item_mark || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Cartons Number */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Cartons Number
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    name="item_cartons"
+                    value={modalData.item_cartons || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* CBM */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">CBM</label>
+                  <input
+                    required
+                    type="text"
+                    name="item_cbm"
+                    value={modalData.item_cbm || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Item Name */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Item Name
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_name"
+                    value={modalData.item_name || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Weight */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Weight
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    name="item_wieght"
+                    value={modalData.item_wieght || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Owner Name */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Owner Name
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_owner_name"
+                    value={modalData.item_owner_name || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                {/* Owner Phone */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Owner Phone
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="item_owner_phone"
+                    value={modalData.item_owner_phone || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-4 mt-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() => handleUpdate(modalEntity, modalData, "item")}
+                >
+                  Update Item
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      {/* Modal for adding update items */}
-      {isModalOpen && modalEntity === "updateship_chek_point" && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
-            <h2 className="text-xl font-bold mb-4">Add New Item</h2>
-            <div className="grid gap-4">
-            <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">
-              Landing Point
-            </label>
-            <input
-              required
-              type="text"
-              name="ship_chek_point_land_point"
-              value={modalData.ship_chek_point_land_point || ""}
-              onChange={handleInputChange}
-              className="w-full border rounded px-3 py-2 bg-slate-50"
-            />
-          </div>
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">Note</label>
-            <input
-              required
-              type="text"
-              name="ship_chek_point_note"
-              value={modalData.ship_chek_point_note || ""}
-              onChange={handleInputChange}
-              className="w-full border rounded px-3 py-2 bg-slate-50"
-            />
-          </div>
+        )}
+        {/* Modal for adding update items */}
+        {isModalOpen && modalEntity === "updateship_chek_point" && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+              <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+              <div className="grid gap-4">
+                <div className="mb-4 w-full">
+                  <label className="block text-sm font-medium mb-2">
+                    Landing Point
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="ship_chek_point_land_point"
+                    value={modalData.ship_chek_point_land_point || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2 bg-slate-50"
+                  />
+                </div>
+                <div className="mb-4 w-full">
+                  <label className="block text-sm font-medium mb-2">Note</label>
+                  <input
+                    required
+                    type="text"
+                    name="ship_chek_point_note"
+                    value={modalData.ship_chek_point_note || ""}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2 bg-slate-50"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-4 mt-4">
+                <button
+                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() =>
+                    handleUpdate(modalEntity, modalData, "ship_chek_point")
+                  }
+                >
+                  Update Chek Point
+                </button>
+              </div>
             </div>
-            <div className="flex justify-end space-x-4 mt-4">
-              <button
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={() => handleUpdate(modalEntity, modalData, "ship_chek_point")}
-              >
-                Update Chek Point
-              </button>
-            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -1275,7 +1301,6 @@ const Section = ({
             />
           </div>
           <div className=" place-self-center w-full mt-4">
-         
             <button
               className="bg-blue-500 text-white px-4 py-2 w-full lg:w-fit  rounded hover:bg-blue-600"
               onClick={onAddChekPoint}
@@ -1367,24 +1392,24 @@ const Section = ({
             </>
           ) : (
             <div className="overflow-x-auto">
-            <h1 className="font-inter text-3xl">Ship land Point</h1>
-             <table className="  w-full text-left border-collapse my-7">
+              <h1 className="font-inter text-3xl">Ship land Point</h1>
+              <table className="  w-full text-left border-collapse my-7">
                 <thead>
                   <tr className="bg-gray-200">
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                    ship_code
+                      ship_code
                     </th>
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                    ship_chek_point_land_point
+                      ship_chek_point_land_point
                     </th>
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                    ship_check_point_date
+                      ship_check_point_date
                     </th>
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                    ship_chek_point_note
+                      ship_chek_point_note
                     </th>
                     <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                    Action
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -1417,7 +1442,6 @@ const Section = ({
                           >
                             Delete
                           </button>
-                         
                         </td>
                       </tr>
                     ))}
@@ -1432,25 +1456,25 @@ const Section = ({
                       Shing Mark
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                       cartons
+                      cartons
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                       cbm
+                      cbm
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                    item name
+                      item name
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                     wieght
+                      wieght
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                    customer name
+                      customer name
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                    customer contact Number
+                      customer contact Number
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                    date
+                      date
                     </th>
                   </tr>
                 </thead>
@@ -1465,7 +1489,10 @@ const Section = ({
                           {item.item_cartons}
                         </td>
                         <td className=" px-4 py-2 text-center relative">
-                          {item.item_cbm} m <span className="absolute top-2 rotate-0 text-xs">3</span>
+                          {item.item_cbm} m{" "}
+                          <span className="absolute top-2 rotate-0 text-xs">
+                            3
+                          </span>
                         </td>
                         <td className=" px-4 py-2 text-center">
                           {item.item_name}
