@@ -89,90 +89,104 @@ const ShipmentTracker = () => {
     { label: "Out for delivery", completed: false },
     { label: "Delivered", completed: false },
   ];
+  // state.ship.ship_chek_point_land_point
 
   // Update steps based on the shipment data
   state.ship.ship_chek_point.forEach((checkPoint) => {
     const stepLabel = statusMap[checkPoint.ship_chek_point_note];
-    console.log("stepLabel");
-    console.log(stepLabel);
+    console.log("stepLabel:", stepLabel);
 
     if (stepLabel) {
       const stepIndex = steps.findIndex((step) => step.label === stepLabel);
       if (stepIndex !== -1) {
         steps[stepIndex].completed = true;
+        steps[stepIndex].landPoint = checkPoint.ship_chek_point_land_point; // Add land point to the step
       }
     }
   });
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md h-screen ">
-      <img src={topTajLogo} alt="Footer Logo" className="mb-6" />
-      <div className="mb-4">
-        <h2 className="text-lg font-bold">Latest Update</h2>
-        <p className="text-sm text-gray-500">
-          The shipment is currently in: {state.ship.ship_state || "Unknown"}
-        </p>
-        <p className="text-sm text-gray-400">{state.ship.ship_end_date}</p>
-      </div>
-      <div className="flex items-start">
-        <div className="flex flex-col items-center">
-          {steps.map((step, index) => (
-            <div key={index} className="flex items-center">
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md h-screen mb-20 flex justify-center items-center ">
+      <div>
+        <img src={topTajLogo} alt="Footer Logo" className="mb-6" />
+
+        {/* text */}
+        <div className="mb-4">
+          <h2 className="text-lg font-bold">Latest Update</h2>
+          <p className="text-sm text-gray-500">
+            The shipment is currently in: {state.ship.ship_state || "Unknown"}
+          </p>
+          <p className="text-sm text-gray-400">{state.ship.ship_end_date}</p>
+        </div>
+
+        {/* pointakan */}
+        <div className="flex items-start">
+          <div className="flex flex-col items-center">
+            {steps.map((step, index) => (
+              <div key={index} className="flex items-center">
+                <div
+                  className={`w-6 h-6 flex items-center justify-center rounded-full z-[1] ${
+                    step.completed ? "bg-green-500" : "bg-gray-300"
+                  }`}
+                >
+                  {step.completed && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="white"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
+                <div
+                  className={`w-1 -ml-3 ${
+                    step.completed ? "bg-green-500" : "bg-gray-300"
+                  } ${index < steps.length ? "h-[80px]" : "h-0"}`}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="ml-4">
+            {steps.map((step, index) => (
               <div
-                className={`w-6 h-6 flex items-center justify-center rounded-full z-[1] ${
-                  step.completed ? "bg-green-500" : "bg-gray-300"
+                key={index}
+                className={`text-sm py-[30px] font-medium ${
+                  step.completed ? "text-gray-800" : "text-gray-400"
                 }`}
               >
-                {step.completed && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="white"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                {step.label}
+                {step.landPoint && (
+                  <span className="block text-sm text-blue-500">
+                    ({step.landPoint})
+                  </span>
                 )}
               </div>
-              <div
-                className={`w-1 -ml-3 ${
-                  step.completed ? "bg-green-500" : "bg-gray-300"
-                } ${index < steps.length ? "h-[80px]" : "h-0"}`}
-              />
+            ))}
+          </div>
+
+          {/* text swr */}
+          <div className="flex flex-col gap-y-[27rem] ml-20 mt-6 text-sm text-gray-500">
+            <div>
+              <p className="font-medium">Origin</p>
+              <p className="font-medium text-red-500">
+                {state.ship.ship_londing_area}
+              </p>
             </div>
-          ))}
-        </div>
-        <div className="ml-4">
-          {steps.map((step, index) => (
-            <div
-              key={index}
-              className={`text-sm py-[30px] font-medium ${
-                step.completed ? "text-gray-800" : "text-gray-400"
-              }`}
-            >
-              {step.label}
+            <div>
+              <p className="font-medium">Destination</p>
+              <p className="font-medium text-red-500">
+                {state.ship.ship_destination}
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex justify-between mt-6 text-sm text-gray-500">
-        <div>
-          <p>Origin</p>
-          <p className="font-medium text-red-500">
-            {state.ship.ship_londing_area}
-          </p>
-        </div>
-        <div>
-          <p>Destination</p>
-          <p className="font-medium text-red-500">
-            {state.ship.ship_destination}
-          </p>
+          </div>
         </div>
       </div>
     </div>
