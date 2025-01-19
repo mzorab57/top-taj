@@ -28,7 +28,7 @@ const AppRoutes = () => {
         <Route path="/services" element={<ServicesSection />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/tracking" element={<Tracking  />} />
+        <Route path="/tracking/:id" element={<Tracking />} />
       </Routes>
     </div>
   );

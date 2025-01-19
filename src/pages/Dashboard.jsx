@@ -66,7 +66,7 @@ const AppProvider = ({ children }) => {
 
   //   add entity bo naw api pashan binera bo naw useAppContext la AdminDashBorad
   const addEntity = async (entity, endpoint, data) => {
-    console.log(endpoint + " addEntiti");
+   
 
     try {
       const response = await axios.post(`${API_HOST}${endpoint}`, data, {
@@ -138,7 +138,7 @@ const AdminDashboard = () => {
     updateStateEntity,
   } = useAppContext();
   const location = useLocation().pathname;
-
+  
   const [activeSection, setActiveSection] = React.useState(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalData, setModalData] = React.useState({});
@@ -421,20 +421,14 @@ const AdminDashboard = () => {
       console.error("Failed to update admin:", error);
     }
   };
-  console.log("shipment");
-  // console.log(fetchData("ship", "ship/read.php"););
+
 
   //  pahsn dani dashbord
   return (
     <>
-      {location === "/tracking" ? <ShipmentTracker /> : ""}
-
       <div
-        className={`${
-          location === "/tracking"
-            ? "hidden"
-            : "container mx-auto p-4 bg-gray-100 min-h-screen "
-        } `}
+        className={`container mx-auto p-4 bg-gray-100 min-h-screen mt-44 `}
+        
       >
         <h1 className="text-4xl font-extrabold text-center text-blue-600 mb-8">
           Admin Dashboard

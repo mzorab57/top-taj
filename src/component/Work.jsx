@@ -5,7 +5,7 @@ const Booking = () => {
   
 
   return (
-    <div className="mt-12 overflow-hidden pb-12 border-b border-neutral-100">
+    <div className="mt-12 overflow-hidden pb-12 border-b border-neutral-100 font-Trifelia">
     {/* Marquee Container */}
     <div
       className="flex animate-marquee"

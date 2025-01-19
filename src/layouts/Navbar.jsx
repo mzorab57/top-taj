@@ -50,22 +50,20 @@ const Navbar = () => {
     <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
       {/* Main Navbar */}
       <div
-        className={`${location.pathname === '/dashboard' || location.pathname === '/tracking' ? 'hidden': 'flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full '}   `}
+        className={` flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full   `}
       >
         {/* top */}
-        <div
+          <div
           className={`${
-            color
+            color 
               ? "opacity-0  translate-y-[-100%] duration-200 ease-in transition-all"
               : "opacity-100 translate-y-0 duration-200 ease-out transition-all"
           } flex font-inter justify-between items-center text-white text-sm py-4 px-1 max-w-[1095px] bg-transparent h-full w-full   `}
         >
           {/* Location */}
        
-            <span>China, Kwanjo</span>
-        
-
-            <span>info@toptaj.com</span>
+            <span className={`${location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>China, Kwanjo</span>
+            <span className={`${location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>info@toptaj.com</span>
           {/* Icons */}
           <div
             style={{
@@ -86,7 +84,8 @@ const Navbar = () => {
               <AiFillInstagram size={20} />
             </a>
           </div>
-        </div>
+        </div> 
+     
 
         {/* main nav */}
         <div

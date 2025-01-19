@@ -1,11 +1,15 @@
 import React, { useReducer, useContext, createContext, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import topTajLogo from "/assets/img/toptajLogo.jpg";
+import { CgArrowRight } from "react-icons/cg";
+
+// API host URL
 const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
 
 // Initial state for the reducer
 const initialState = {
-  ship: null, // Updated to match API response structure
+  ship: null,
   loading: false,
   error: null,
 };
@@ -14,12 +18,7 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_SUCCESS":
-      return {
-        ...state,
-        [action.payload.entity]: action.payload.data,
-        loading: false,
-        error: null,
-      };
+      return { ...state, ship: action.payload, loading: false, error: null };
     case "FETCH_ERROR":
       return { ...state, error: action.payload, loading: false };
     case "LOADING":
@@ -37,38 +36,36 @@ export const useAppContext = () => useContext(AppContext);
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchData = async (entity, endpoint) => {
+  const fetchData = async (id) => {
     dispatch({ type: "LOADING" });
     try {
-      const response = await axios.get(`${API_HOST}${endpoint}`);
-      console.log("API Response:", response.data.data[0]); // Log the API response
+      const response = await axios.get(`${API_HOST}item/read.php?item_mark=${id}`);
       const data = response.data.data[0] || {};
-      dispatch({ type: "FETCH_SUCCESS", payload: { entity, data } });
+      dispatch({ type: "FETCH_SUCCESS", payload: data });
     } catch (error) {
       dispatch({ type: "FETCH_ERROR", payload: error.message });
     }
   };
 
-  const value = { state, dispatch, fetchData };
+  const value = { state, fetchData };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 // ShipmentTracker Component
 const ShipmentTracker = () => {
+  const { id } = useParams(); // Get `id` from the URL
   const { state, fetchData } = useAppContext();
-  console.log("log");
-  console.log(state.ship);
-
+ 
+  //  console.log(location.split(0,3)[0]);
   // Fetch shipment data on mount
   useEffect(() => {
-    fetchData("ship", "ship/read.php");
-  }, []);
+    fetchData(id); // Fetch shipment data by ID
+  }, [id]);
 
   // Loading and error states
-  if (state.loading) return <div>Loading...</div>;
+  if (state.loading) return <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">Loading...</div>;
   if (state.error) return <div>Error: {state.error}</div>;
-  if (!state.ship || !state.ship.ship_chek_point)
-    return <div>No shipment data available</div>;
+  if (!state.ship) return <div>No shipment data found for ID: {id}</div>;
 
   const statusMap = {
     Created: "Created",
@@ -106,15 +103,15 @@ const ShipmentTracker = () => {
   });
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md h-screen mb-20 flex justify-center items-center ">
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md overflow-hidden h-screen mt-20 flex justify-center items-center ">
       <div>
-        <img src={topTajLogo} alt="Footer Logo" className="mb-6" />
+        {/* <img src={topTajLogo} alt="Footer Logo" className="mb-6" /> */}
 
         {/* text */}
         <div className="mb-4">
-          <h2 className="text-lg font-bold">Latest Update</h2>
-          <p className="text-sm text-gray-500">
-            The shipment is currently in: {state.ship.ship_state || "Unknown"}
+          <h2 className="text-lg font-Bedug">Latest Update</h2>
+          <p className="text-lg font-Bedug text-gray-500">
+            The shipment is currently in: <span className={`${state.ship.ship_state === 'created'? 'text-yellow-500 tracking-wider': 'text-green-500 tracking-wider'} `}>{state.ship.ship_state || "Unknown"}</span>
           </p>
           <p className="text-sm text-gray-400">{state.ship.ship_end_date}</p>
         </div>
@@ -147,7 +144,7 @@ const ShipmentTracker = () => {
                   )}
                 </div>
                 <div
-                  className={`w-1 -ml-3 ${
+                  className={`w-1 -ml-3  ${
                     step.completed ? "bg-green-500" : "bg-gray-300"
                   } ${index < steps.length ? "h-[80px]" : "h-0"}`}
                 />
@@ -158,13 +155,13 @@ const ShipmentTracker = () => {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className={`text-sm py-[30px] font-medium ${
+                className={`text-sm flex items-center py-[30px] font-medium ${
                   step.completed ? "text-gray-800" : "text-gray-400"
                 }`}
               >
-                {step.label}
+                {step.label} <CgArrowRight size={17} className="mx-1" />
                 {step.landPoint && (
-                  <span className="block text-sm text-blue-500">
+                  <span className="block text-sm text-blue-500/50">
                     ({step.landPoint})
                   </span>
                 )}

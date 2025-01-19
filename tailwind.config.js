@@ -14,9 +14,8 @@ export default {
         },
       },
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
-        poppins: ['Poppins', 'sans-serif'],
-        pacifico: ['pacifico', 'sans-serif'],
+        Bedug: ['"Bedug"', "sans"],
+        Trifelia: ['"Trifelia"', "sans"],
       },
       colors: {
         primary: '#033647', // Define a primary color

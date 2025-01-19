@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+ 
+  const [trackingId, setTrackingId] = useState(""); // State to hold the tracking ID
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  const handleTrackOrder = (e) => {
+    e.preventDefault();
+    if (trackingId.trim() !== "") {
+      navigate(`/tracking/${trackingId}`); // Navigate to tracking/:id
+    } else {
+      alert("Please enter a valid tracking ID."); // Optional validation
+    }
+  };
+
   useEffect(() => {
     AOS.init();
   }, []);
@@ -13,7 +31,7 @@ const About = () => {
       <div className="w-full  grid lg:flex  lg:flex-wrap  py-20   items-center ">
       <h1
         
-        className="text-2xl lg:text-5xl text-gray-600  font-semibold font-inter mt-20 lg:mb-10 mb-4 px-4 w-full"
+        className="text-2xl lg:text-5xl text-gray-600  font-semibold font-Trifelia mt-20 lg:mb-10 mb-4 px-4 w-full"
       >
         Track your shipment
       </h1>
@@ -56,7 +74,7 @@ const About = () => {
 
               {/* Track Order Form */}
               <form
-                // action="#"
+                  onSubmit={handleTrackOrder}
                 className="flex-grow py-16"
                data-aos="fade-up"
                 data-aos-duration="1000"
@@ -64,14 +82,16 @@ const About = () => {
                 <div
                  className="flex gap-y-2 gap-x-4 my-5 lg:flex-row flex-col mr-8 ">
                   <input
-                    type="text"
-                    id="track"
-                    placeholder="Enter your tracking ID"
-                    className="px-7 lg:py-3 py-1.5 bg-white font-inter placeholder-gray-600 border-0 focus:outline-none w-full rounded shadow-none flex-grow"
+                   type="text"
+                   id="track"
+                   value={trackingId}
+                   onChange={(e) => setTrackingId(e.target.value)}
+                   placeholder="Enter your tracking ID"
+                    className="px-7 lg:py-3 py-1.5 bg-white font-Trifelia placeholder-gray-600 border-0 focus:outline-none w-full rounded shadow-none flex-grow"
                   />
                   <button
-                    // type="submit"
-                    className=" text-white bg-yellow-400 font-inter text-xl lg:py-3 py-1 px-6 rounded lg:w-48 w-full "
+                     type="submit"
+                    className=" text-white bg-yellow-400 font-Trifelia text-xl lg:py-3 py-1 px-6 rounded lg:w-48 w-full "
                     
                   >
                     Track order
