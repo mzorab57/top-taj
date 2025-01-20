@@ -9,7 +9,7 @@ const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
 
 // Initial state for the reducer
 const initialState = {
-  ship: null,
+  item: null,
   loading: false,
   error: null,
 };
@@ -18,7 +18,7 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_SUCCESS":
-      return { ...state, ship: action.payload, loading: false, error: null };
+      return { ...state, item: action.payload, loading: false, error: null };
     case "FETCH_ERROR":
       return { ...state, error: action.payload, loading: false };
     case "LOADING":
@@ -39,13 +39,31 @@ const AppProvider = ({ children }) => {
   const fetchData = async (id) => {
     dispatch({ type: "LOADING" });
     try {
-      const response = await axios.get(`${API_HOST}item/read.php?item_mark=${id}`);
-      const data = response.data.data[0] || {};
-      dispatch({ type: "FETCH_SUCCESS", payload: data });
+      const url = `${API_HOST}item/read.php?item_mark=${id}`;
+      console.log("Request URL:", url);
+  
+      const response = await axios.get(url);
+      console.log("API Response:", response.data);
+  
+      const data = response.data.data || [];
+      
+      // Filter items by item_mark
+      const filteredData = data.filter((item) => item.item_mark === id);
+  
+      if (filteredData.length === 0) {
+        console.warn("No matching items found for item_mark:", id);
+        dispatch({ type: "FETCH_SUCCESS", payload: [] });
+      } else {
+        console.log("Filtered Data:", filteredData);
+        dispatch({ type: "FETCH_SUCCESS", payload: filteredData[0] });
+      }
     } catch (error) {
+      console.error("Fetch error:", error.response?.data || error.message);
       dispatch({ type: "FETCH_ERROR", payload: error.message });
     }
   };
+  
+  
 
   const value = { state, fetchData };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -65,7 +83,7 @@ const ShipmentTracker = () => {
   // Loading and error states
   if (state.loading) return <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">Loading...</div>;
   if (state.error) return <div>Error: {state.error}</div>;
-  if (!state.ship) return <div>No shipment data found for ID: {id}</div>;
+  if (!state.item || state.item.item_state !== "active") return <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">No shipment data found for ID: {id}</div>;
 
   const statusMap = {
     Created: "Created",
@@ -86,21 +104,26 @@ const ShipmentTracker = () => {
     { label: "Out for delivery", completed: false },
     { label: "Delivered", completed: false },
   ];
-  // state.ship.ship_chek_point_land_point
+  // state.item.ship_chek_point_land_point
 
   // Update steps based on the shipment data
-  state.ship.ship_chek_point.forEach((checkPoint) => {
-    const stepLabel = statusMap[checkPoint.ship_chek_point_note];
-    console.log("stepLabel:", stepLabel);
-
-    if (stepLabel) {
-      const stepIndex = steps.findIndex((step) => step.label === stepLabel);
-      if (stepIndex !== -1) {
-        steps[stepIndex].completed = true;
-        steps[stepIndex].landPoint = checkPoint.ship_chek_point_land_point; // Add land point to the step
+  if (state.item && state.item.ship_chek_point) {
+    state.item.ship_chek_point.forEach((checkPoint) => {
+      const stepLabel = statusMap[checkPoint.ship_chek_point_note];
+      console.log("stepLabel:", stepLabel);
+  
+      if (stepLabel) {
+        const stepIndex = steps.findIndex((step) => step.label === stepLabel);
+        if (stepIndex !== -1) {
+          steps[stepIndex].completed = true;
+          steps[stepIndex].landPoint = checkPoint.ship_chek_point_land_point; // Add land point to the step
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log("ship or ship_chek_point is undefined");
+  }
+  
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md overflow-hidden h-screen mt-20 flex justify-center items-center ">
@@ -111,9 +134,9 @@ const ShipmentTracker = () => {
         <div className="mb-4">
           <h2 className="text-lg font-Bedug">Latest Update</h2>
           <p className="text-lg font-Bedug text-gray-500">
-            The shipment is currently in: <span className={`${state.ship.ship_state === 'created'? 'text-yellow-500 tracking-wider': 'text-green-500 tracking-wider'} `}>{state.ship.ship_state || "Unknown"}</span>
+            The shipment is currently in: <span className={`${state.item.ship_state === 'created'? 'text-yellow-500 tracking-wider': 'text-green-500 tracking-wider'} `}>{state.item.ship_state || "Unknown"}</span>
           </p>
-          <p className="text-sm text-gray-400">{state.ship.ship_end_date}</p>
+          <p className="text-sm text-gray-400">{state.item.ship_end_date}</p>
         </div>
 
         {/* pointakan */}
@@ -174,13 +197,13 @@ const ShipmentTracker = () => {
             <div>
               <p className="font-medium">Origin</p>
               <p className="font-medium text-red-500">
-                {state.ship.ship_londing_area}
+                {state.item.ship_londing_area}
               </p>
             </div>
             <div>
               <p className="font-medium">Destination</p>
               <p className="font-medium text-red-500">
-                {state.ship.ship_destination}
+                {state.item.ship_destination}
               </p>
             </div>
           </div>

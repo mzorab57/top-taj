@@ -21,6 +21,7 @@ const Hero = () => {
       delay: 0,
       smooth: "easeInOutQuart",
     });
+    window.scrollTo(0,0)
   };
   
     useEffect(() => {

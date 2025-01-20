@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const About = () => {
  
   const [trackingId, setTrackingId] = useState(""); // State to hold the tracking ID
   const navigate = useNavigate();
-
+const location = useLocation();
   useEffect(() => {
     AOS.init();
   }, []);
@@ -17,17 +17,32 @@ const About = () => {
     e.preventDefault();
     if (trackingId.trim() !== "") {
       navigate(`/tracking/${trackingId}`); // Navigate to tracking/:id
+      window.scrollTo(0, 0); // Scroll to the top of the page
     } else {
       alert("Please enter a valid tracking ID."); // Optional validation
     }
+    
   };
 
   useEffect(() => {
     AOS.init();
   }, []);
 
+  
+// ama bo awaya ka ka har shwenek click lasar icon location bkai yan Tracking la navbar aw henetawa sar section track bo search ka.
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const sectionId = location.state.scrollTo; // e.g., "track"
+      const sectionElement = document.getElementById(sectionId);
+
+      if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
+
   return (
-    <section name="about" className="pt-32 overflow-hidden  relative ">
+    <section id="track"  className="pt-32 overflow-hidden  relative z-[1] ">
       <div className="w-full  grid lg:flex  lg:flex-wrap  py-20   items-center ">
       <h1
         
@@ -35,7 +50,7 @@ const About = () => {
       >
         Track your shipment
       </h1>
-      <img src="https://www.commonsupport.com/html/Nasim/Vervoer/images/shape/shape-1.png" alt="shipment" className="absolute right-[1/2%] hidden lg:block -top-20 z-10" />
+      {/* <img src="https://www.commonsupport.com/html/Nasim/Vervoer/images/shape/shape-1.png" alt="shipment" className="absolute right-[1/2%] hidden lg:block -top-20 z-0" /> */}
         {/* Text Section */}
         <div
           className="relative overflow-hidden z-1 max-w-7xl w-full rounded-r-full"
@@ -82,6 +97,7 @@ const About = () => {
                 <div
                  className="flex gap-y-2 gap-x-4 my-5 lg:flex-row flex-col mr-8 ">
                   <input
+                  required
                    type="text"
                    id="track"
                    value={trackingId}

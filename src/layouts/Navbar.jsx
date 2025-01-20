@@ -16,7 +16,17 @@ const Navbar = () => {
   const [isOpenMenu, setOpenMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const isAuthenticated = localStorage.getItem("isLoggedIn");
 
+   // Function to scroll to the about section
+   const scrollToSection = () => {
+    scroller.scrollTo("hero", {
+      offset: -120,
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart",
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,13 +48,10 @@ const Navbar = () => {
   };
   window.addEventListener("scroll", changeHeaderColor);
 
-  const scrollToSection = (section) => {
-    scroller.scrollTo(section, {
-      smooth: true,
-      offset: section === "hero" ? -200 : 40,
-      duration: 500,
-    });
-  };
+
+  
+  
+
 
   return (
     <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
@@ -62,8 +69,8 @@ const Navbar = () => {
         >
           {/* Location */}
        
-            <span className={`${location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>China, Kwanjo</span>
-            <span className={`${location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>info@toptaj.com</span>
+            <span className={`${location.pathname === '/' || location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>China, Kwanjo</span>
+            <span className={`${location.pathname === '/' || location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>info@toptaj.com</span>
           {/* Icons */}
           <div
             style={{
@@ -120,17 +127,17 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link to="about" className="hover:text-yellow-400 cursor-pointer">
+              <Link onClick={ ()=> window.scrollTo(0, 0)} to="about" className="hover:text-yellow-400 cursor-pointer">
                 {t("about")}
               </Link>
             </li>
             <li>
-              <Link to="/services" className="hover:text-yellow-400">
+              <Link onClick={ ()=> window.scrollTo(0, 0)}  to="/services" className="hover:text-yellow-400">
                 {t("services")}
               </Link>
             </li>
             <li>
-              <Link to="/" onClick={() => scrollToSection("about")} className="hover:text-yellow-400">
+              <Link to="/" state={{ scrollTo: "track" }} className="hover:text-yellow-400">
                Tracking
               </Link>
             </li>
@@ -143,6 +150,15 @@ const Navbar = () => {
                 {t("contacts")}
               </Link>
             </li>
+            {isAuthenticated ?    <li>
+              <Link
+                to="/dashboard"
+                className="hover:text-yellow-400 cursor-pointer"
+              >
+                Dashboard
+              </Link>
+            </li> :""}
+        
            
           </ul>
           <LanguageSwitcher />

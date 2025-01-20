@@ -1,34 +1,36 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate  } from "react-router-dom";
 
 import Hero from "../component/Hero";
 import Track from "../component/Track";
-import Work from "../component/Work";
 import ServicesSection from "../pages/ServicesSection";
 import About from "../pages/About";
 import Dashboard from "../pages/Dashboard";
 import Tracking  from "../pages/Tracking";
+import Login from "../pages/Login";
+
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("isLoggedIn"); // Check login status
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 const AppRoutes = () => {
   return (
-    // aw set show service bo awaia katek mouse lasar page lachu la har shwenek bet colse aw hover bkat
     <div>
       <Routes>
-        <Route
-          index
-          path="/"
-          element={
-            <>
-              <Hero />
-              <Track />
-              <Work />
-            </>
-          }
-        />
+        <Route path="/" element={<><Hero /> <Track/> </>} />
         <Route path="/services" element={<ServicesSection />} />
         <Route path="/about" element={<About />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
         <Route path="/tracking/:id" element={<Tracking />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   );

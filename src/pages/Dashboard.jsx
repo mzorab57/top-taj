@@ -1,7 +1,8 @@
 import React, { useReducer, useContext, createContext } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ShipmentTracker from "./Tracking";
+import TableWithSearch from "../component/ui/TableWithSearch";
 
 const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
 
@@ -66,8 +67,6 @@ const AppProvider = ({ children }) => {
 
   //   add entity bo naw api pashan binera bo naw useAppContext la AdminDashBorad
   const addEntity = async (entity, endpoint, data) => {
-   
-
     try {
       const response = await axios.post(`${API_HOST}${endpoint}`, data, {
         headers: {
@@ -137,8 +136,8 @@ const AdminDashboard = () => {
     updateEntity,
     updateStateEntity,
   } = useAppContext();
-  const location = useLocation().pathname;
-  
+  const navigate = useNavigate();
+
   const [activeSection, setActiveSection] = React.useState(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalData, setModalData] = React.useState({});
@@ -272,7 +271,8 @@ const AdminDashboard = () => {
   };
 
   // handel Submit
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default behavior
     console.log("modalEntity");
     console.log(modalEntity);
 
@@ -422,14 +422,25 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    navigate("/login");
+  };
 
   //  pahsn dani dashbord
   return (
     <>
       <div
-        className={`container mx-auto p-4 bg-gray-100 min-h-screen mt-44 `}
-        
+        className={`container mx-auto p-4 bg-gray-100 min-h-screen mt-44 relative `}
       >
+        <div className="w-ful flex justify-end">
+          <button
+            onClick={handleLogout}
+            className="text-red-400  px-2 mb-5  md:absolute right-5 text-lg rounded top-7  hover:bg-red-500 hover:text-white"
+          >
+            Logout
+          </button>
+        </div>
         <h1 className="text-4xl font-extrabold text-center text-blue-600 mb-8">
           Admin Dashboard
         </h1>
@@ -480,7 +491,10 @@ const AdminDashboard = () => {
         {/* Modal for adding new admin */}
         {isModalOpen && modalEntity === "admin" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white p-6 rounded-lg shadow-lg w-96"
+            >
               <h2 className="text-xl font-bold mb-4">Add New Admin</h2>
               {/* Input for admin_name */}
               <div className="mb-4">
@@ -517,7 +531,7 @@ const AdminDashboard = () => {
                 </label>
                 <input
                   required
-                  type="text"
+                  type="number"
                   name="admin_phone"
                   value={modalData.admin_phone || ""}
                   onChange={handleInputChange}
@@ -548,18 +562,28 @@ const AdminDashboard = () => {
                 </button>
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={handleSubmit}
+                  type="submit"
                 >
                   Add Admin
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
         {/* Modal update admin */}
         {isModalOpen && modalEntity === "updateAdmin" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent default behavior
+                if (e.target.checkValidity()) {
+                  handleUpdate(modalEntity, modalData, "admin");
+                } else {
+                  console.warn("Form validation failed");
+                }
+              }}
+              className="bg-white p-6 rounded-lg shadow-lg w-96"
+            >
               <h2 className="text-xl font-bold mb-4">Update Admin</h2>
               {/* Input for admin_name */}
               <div className="mb-4">
@@ -613,7 +637,9 @@ const AdminDashboard = () => {
                   value={modalData.admin_role || ""}
                   onChange={handleInputChange}
                   className="w-full border rounded px-3 py-2"
+                  required
                 >
+                  <option value="">Select Role</option>
                   <option value="admin">Admin</option>
                   <option value="user">User</option>
                 </select>
@@ -621,25 +647,29 @@ const AdminDashboard = () => {
               <div className="flex justify-end space-x-4">
                 <button
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  type="button"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() => handleUpdate(modalEntity, modalData, "admin")} // Use the same submit function to either add or update
+                  type="submit"
                 >
                   Update Admin
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
 
         {/* modal for adding new ship */}
         {isModalOpen && modalEntity === "ship" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white p-6 rounded-lg shadow-lg w-96"
+            >
               <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
               <div className="mb-4">
                 {/* admin ID (Dropdown) */}
@@ -709,23 +739,6 @@ const AdminDashboard = () => {
                   className="w-full border rounded px-3 py-2"
                 />
               </div>
-              {/* <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Admin Name</label>
-              <select
-                name="admin_id"
-                value={modalData.admin_id || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="">Select Admin</option>
-                {state.admin &&
-                  state.admin.map((admin) => (
-                    <option key={admin.admin_id} value={admin.admin_id}>
-                      {admin.admin_name}
-                    </option>
-                  ))}
-              </select>
-            </div> */}
               <div className="flex justify-end space-x-4">
                 <button
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
@@ -734,19 +747,29 @@ const AdminDashboard = () => {
                   Cancel
                 </button>
                 <button
+                  type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={handleSubmit}
                 >
                   Add Ship
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
         {/* modal for adding update ship */}
         {isModalOpen && modalEntity === "updateShip" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent default behavior
+                if (e.target.checkValidity()) {
+                  handleUpdate(modalEntity, modalData, "ship");
+                } else {
+                  console.warn("Form validation failed");
+                }
+              }}
+              className="bg-white p-6 rounded-lg shadow-lg w-96"
+            >
               <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
               <div className="mb-4">
                 {/* ship ID (Dropdown) */}
@@ -790,23 +813,6 @@ const AdminDashboard = () => {
                   className="w-full border rounded px-3 py-2"
                 />
               </div>
-              {/* <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Ship Code</label>
-              <select
-                name="ship_id"
-                value={modalData.ship_id || ""}
-                onChange={handleInputChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="">Select ship</option>
-                {state.ship &&
-                  state.ship.map((ship) => (
-                    <option key={ship.ship_id} value={ship.ship_id}>
-                      {ship.ship_code}
-                    </option>
-                  ))}
-              </select>
-            </div> */}
               <div className="flex justify-end space-x-4">
                 <button
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
@@ -815,20 +821,23 @@ const AdminDashboard = () => {
                   Cancel
                 </button>
                 <button
+                  type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() => handleUpdate(modalEntity, modalData, "ship")}
                 >
                   Update Ship
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
 
         {/* Modal for adding new items */}
         {isModalOpen && modalEntity === "item" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+            <form
+              onSubmit={(e) => handleSubmit(e)}
+              className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3"
+            >
               <h2 className="text-xl font-bold mb-4">Add New Item</h2>
               <div className="grid grid-cols-2 gap-4">
                 {/* Ship ID (Dropdown) */}
@@ -855,7 +864,7 @@ const AdminDashboard = () => {
                 {/* Item Mark */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Item Mark
+                    Sipping Mark
                   </label>
                   <input
                     required
@@ -941,7 +950,7 @@ const AdminDashboard = () => {
                   </label>
                   <input
                     required
-                    type="text"
+                    type="number"
                     name="item_owner_phone"
                     value={modalData.item_owner_phone || ""}
                     onChange={handleInputChange}
@@ -968,19 +977,29 @@ const AdminDashboard = () => {
                   Cancel
                 </button>
                 <button
+                  type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={handleSubmit}
                 >
                   Add Item
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
         {/* Modal for adding update items */}
         {isModalOpen && modalEntity === "updateItem" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent default behavior
+                if (e.target.checkValidity()) {
+                  handleUpdate(modalEntity, modalData, "item");
+                } else {
+                  console.warn("Form validation failed");
+                }
+              }}
+              className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3"
+            >
               <h2 className="text-xl font-bold mb-4">Add New Item</h2>
               <div className="grid grid-cols-2 gap-4">
                 {/* Ship ID (Dropdown) */}
@@ -1007,7 +1026,7 @@ const AdminDashboard = () => {
                 {/* Item Mark */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Item Mark
+                    Shipping Mark
                   </label>
                   <input
                     required
@@ -1103,25 +1122,36 @@ const AdminDashboard = () => {
               </div>
               <div className="flex justify-end space-x-4 mt-4">
                 <button
+                  type="button"
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
+                  type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() => handleUpdate(modalEntity, modalData, "item")}
                 >
                   Update Item
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
         {/* Modal for adding update items */}
         {isModalOpen && modalEntity === "updateship_chek_point" && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent default behavior
+                if (e.target.checkValidity()) {
+                  handleUpdate(modalEntity, modalData, "ship_chek_point");
+                } else {
+                  console.warn("Form validation failed");
+                }
+              }}
+              className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3"
+            >
               <h2 className="text-xl font-bold mb-4">Add New Item</h2>
               <div className="grid gap-4">
                 <div className="mb-4 w-full">
@@ -1151,21 +1181,20 @@ const AdminDashboard = () => {
               </div>
               <div className="flex justify-end space-x-4 mt-4">
                 <button
+                  type="button"
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
+                  type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() =>
-                    handleUpdate(modalEntity, modalData, "ship_chek_point")
-                  }
                 >
                   Update Chek Point
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
       </div>
@@ -1223,7 +1252,7 @@ const Section = ({
           "item_owner_phone",
           "item_wieght",
           "ship_chek_point",
-          "item_cartons",
+          // "item_cartons",
           "item_name",
           "item_state",
         ];
@@ -1240,7 +1269,10 @@ const Section = ({
 
       {/* Add ship chek point */}
       {title === "ship_chek_point" ? (
-        <div className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5">
+        <form
+          onSubmit={(e) => onAddChekPoint(e)}
+          className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5"
+        >
           <div className="mb-4 w-full">
             <label className="block text-sm font-medium mb-2">Ship Code</label>
             <select
@@ -1273,16 +1305,29 @@ const Section = ({
             />
           </div>
           <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">Note</label>
-            <input
+            <label className="block text-sm font-medium mb-2">Ship Status</label>
+            <select
               required
-              type="text"
               name="ship_chek_point_note"
               value={modalData.ship_chek_point_note || ""}
               onChange={onChange}
               className="w-full border rounded px-3 py-2 bg-slate-50"
-            />
+            >
+              <option value="" disabled>
+                Select a status
+              </option>
+              <option value="Created">Created</option>
+              <option value="Collected">Collected</option>
+              <option value="Departed">Departed</option>
+              <option value="In transit">In transit</option>
+              <option value="Arrived at destination">
+                Arrived at destination
+              </option>
+              <option value="Out for delivery">Out for delivery</option>
+              <option value="Delivered">Delivered</option>
+            </select>
           </div>
+
           <div className="mb-4 w-full">
             <label className="block text-sm font-medium mb-2">Date</label>
             <input
@@ -1296,94 +1341,95 @@ const Section = ({
           </div>
           <div className=" place-self-center w-full mt-4">
             <button
+              type="submit"
               className="bg-blue-500 text-white px-4 py-2 w-full lg:w-fit  rounded hover:bg-blue-600"
-              onClick={onAddChekPoint}
             >
               Add Landing Point
             </button>
           </div>
-        </div>
+        </form>
       ) : (
         <>
           {title !== "shipDetail" ? (
-            <>
-              <button
-                onClick={onAddClick}
-                className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
-              >
-                Add New {title}
-              </button>
-              <div className="overflow-auto">
-                <table className="table-auto w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-200">
-                      {data.length > 0 &&
-                        Object.keys(data[0])
-                          .filter((key) => !excludedFields.includes(key))
-                          .map((key) => (
-                            <th
-                              key={key}
-                              className="border-b px-4 py-2 text-sm text-gray-600"
-                            >
-                              {key}
-                            </th>
-                          ))}
-                      {data.length > 0 && (
-                        <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                          Actions
-                        </th>
-                      )}
-                    </tr>
-                  </thead>
+            // <>
+            //   <button
+            //     onClick={onAddClick}
+            //     className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
+            //   >
+            //     Add New {title}
+            //   </button>
+            //   <div className="overflow-auto">
+            //     <table className="table-auto w-full text-left border-collapse">
+            //       <thead>
+            //         <tr className="bg-gray-200">
+            //           {data.length > 0 &&
+            //             Object.keys(data[0])
+            //               .filter((key) => !excludedFields.includes(key))
+            //               .map((key) => (
+            //                 <th
+            //                   key={key}
+            //                   className="border-b px-4 py-2 text-sm text-gray-600"
+            //                 >
+            //                   {key}
+            //                 </th>
+            //               ))}
+            //           {data.length > 0 && (
+            //             <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+            //               Actions
+            //             </th>
+            //           )}
+            //         </tr>
+            //       </thead>
 
-                  <tbody>
-                    {data.map((item, index) => (
-                      <tr key={index} className="hover:bg-gray-100">
-                        {Object.entries(item)
-                          .filter(([key]) => !excludedFields.includes(key)) // Exclude unwanted fields
-                          .map(([key, value], i) => (
-                            <td
-                              onClick={() =>
-                                title === "ship"
-                                  ? onShipClick("shipDetail", item)
-                                  : ""
-                              }
-                              key={i}
-                              className="border-b px-4 py-2 text-sm text-gray-800"
-                            >
-                              {value}
-                            </td>
-                          ))}
-                        <td className="border-b px-4 py-2 text-center">
-                          <button
-                            onClick={() => handleUpdateClick(title, item)} // Pass the item for update
-                            className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
-                          >
-                            Update
-                          </button>
-                          <button
-                            onClick={() => onDelete(item)}
-                            className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
-                          >
-                            Delete
-                          </button>
-                          {title === "ship" ? (
-                            <button
-                              onClick={() => onChangeState(item)}
-                              className="text-green-500 hover:underline ml-2 border-green-400 border rounded px-1"
-                            >
-                              state
-                            </button>
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
+            //       <tbody>
+            //         {data.map((item, index) => (
+            //           <tr key={index} className="hover:bg-gray-100">
+            //             {Object.entries(item)
+            //               .filter(([key]) => !excludedFields.includes(key)) // Exclude unwanted fields
+            //               .map(([key, value], i) => (
+            //                 <td
+            //                   onClick={() =>
+            //                     title === "ship"
+            //                       ? onShipClick("shipDetail", item)
+            //                       : ""
+            //                   }
+            //                   key={i}
+            //                   className="border-b px-4 py-2 text-sm text-gray-800"
+            //                 >
+            //                   {value}
+            //                 </td>
+            //               ))}
+            //             <td className="border-b px-4 py-2 text-center">
+            //               <button
+            //                 onClick={() => handleUpdateClick(title, item)} // Pass the item for update
+            //                 className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
+            //               >
+            //                 Update
+            //               </button>
+            //               <button
+            //                 onClick={() => onDelete(item)}
+            //                 className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
+            //               >
+            //                 Delete
+            //               </button>
+            //               {title === "ship" ? (
+            //                 <button
+            //                   onClick={() => onChangeState(item)}
+            //                   className="text-green-500 hover:underline ml-2 border-green-400 border rounded px-1"
+            //                 >
+            //                   state
+            //                 </button>
+            //               ) : (
+            //                 ""
+            //               )}
+            //             </td>
+            //           </tr>
+            //         ))}
+            //       </tbody>
+            //     </table>
+            //   </div>
+            // </>
+            <TableWithSearch title={title} data={data} excludedFields={excludedFields} onShipClick={onShipClick} handleUpdateClick={handleUpdateClick} onDelete={onDelete} onChangeState={onChangeState} onAddClick={onAddClick}  />
           ) : (
             <div className="overflow-x-auto">
               <h1 className="font-inter text-3xl">Ship land Point</h1>
