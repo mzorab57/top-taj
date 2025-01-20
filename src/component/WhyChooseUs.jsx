@@ -47,7 +47,7 @@ const WhyChooseUs = () => {
               }}
             />
           </div>
-          <div className="absolute bottom-0 -left-56 scale-75 lg:scale-105 lg:left-0 translate-y-32 ">
+          <div className="absolute -bottom-20  -left-56 scale-75 lg:scale-105 lg:left-0 translate-y-32 ">
             <img
               src="https://www.commonsupport.com/html/Nasim/Vervoer/images/shape/shape-4.png"
               alt="Shape 4"
@@ -99,7 +99,7 @@ const WhyChooseUs = () => {
                     <FiMapPin className="text-yellow-400 text-xl" />
                     <span className="font-semibold">Real Time Tracking</span>
                   </div>
-                  <BsChevronRight className="text-yellow-400" />
+                  {/* <BsChevronRight className="text-yellow-400" /> */}
                 </li>
                 <li
                   className={`flex items-center justify-between p-4 border rounded shadow-md w-full  `}
@@ -113,66 +113,7 @@ const WhyChooseUs = () => {
             </div>
 
             {/* Tab Content */}
-            <div className="  w-full lg:w-1/4 ">
-              {activeTab === "tab-2" && (
-                <div className="p-6 max-w-6xl bg-[#165b74]  w-full  shadow-md rounded">
-                  <h4 className="text-xl font-bold">
-                    Real Time <span className="">Tracking</span>
-                  </h4>
-                  <div className="mt-6">
-                    <label className="block text-sm font-medium ">
-                      Tracking ID:
-                    </label>
-                    <div className="flex mt-1 bg-white rounded ">
-                      <input
-                        type="text"
-                        placeholder="Tracking ID number"
-                        className="flex-grow pl-4 pr-2 py-2 border rounded focus:ring-red-500 focus:border-yellow-400"
-                      />
-                      <button className="text-white m-1 bg-yellow-600 brightness-125  px-7 py-2  rounded transition">
-                        Track
-                      </button>
-                    </div>
-                    <p className="mt-2 text-sm ">
-                      Enter the ID of your project to track its status. <br />
-                      (Demo project IDs are 1234, 2234, and 3234.)
-                    </p>
-                  </div>
-
-                  {/* level bar */}
-                  <div className="flex items-center my-4">
-                    {/* Step 1 */}
-                    <div className="flex flex-col items-center">
-                      <div className="size-5 border-4 border-yellow-600 brightness-125 flex items-center justify-center rounded-full bg-white text-white"></div>
-                      <p className="text-sm mt-2 text-white">Payment</p>
-                    </div>
-                    <div className="flex-1 h-0.5 mb-7 bg-white"></div>
-
-                    {/* Step 2 */}
-                    <div className="flex flex-col items-center">
-                      <div className="size-5 border-4 border-yellow-600 brightness-125 flex items-center justify-center rounded-full bg-white text-white"></div>
-                      <p className="text-sm mt-2">Processing</p>
-                    </div>
-                    <div className="flex-1 h-0.5 mb-7 bg-white"></div>
-
-                    {/* Step 3 */}
-                    <div className="flex flex-col items-center">
-                      <div className="size-5 border-4  border-yellow-600 brightness-125 flex items-center justify-center rounded-full bg-white text-white"></div>
-                      <p className="text-sm mt-2">Shiped</p>
-                    </div>
-                  </div>
-
-                  <div className="tracking-text text-white p-4  bg-sky-400/50 h-32">
-                    <div className="date text-gray-200 text-sm">
-                      12 March, 2022 - 19:03
-                    </div>
-                    <p className="text-gray-200">
-                      Thank you for shipping to Vervoer
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
+         
           </div>
         </div>
       </section>

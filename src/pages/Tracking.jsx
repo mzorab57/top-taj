@@ -1,7 +1,6 @@
 import React, { useReducer, useContext, createContext, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import topTajLogo from "/assets/img/toptajLogo.jpg";
 import { CgArrowRight } from "react-icons/cg";
 
 // API host URL

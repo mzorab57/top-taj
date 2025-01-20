@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import { IoIosSearch } from "react-icons/io";
 
 const About = () => {
- 
   const [trackingId, setTrackingId] = useState(""); // State to hold the tracking ID
   const navigate = useNavigate();
-const location = useLocation();
+  const location = useLocation();
   useEffect(() => {
     AOS.init();
   }, []);
@@ -21,15 +21,13 @@ const location = useLocation();
     } else {
       alert("Please enter a valid tracking ID."); // Optional validation
     }
-    
   };
 
   useEffect(() => {
     AOS.init();
   }, []);
 
-  
-// ama bo awaya ka ka har shwenek click lasar icon location bkai yan Tracking la navbar aw henetawa sar section track bo search ka.
+  // ama bo awaya ka ka har shwenek click lasar icon location bkai yan Tracking la navbar aw henetawa sar section track bo search ka.
   useEffect(() => {
     if (location.state?.scrollTo) {
       const sectionId = location.state.scrollTo; // e.g., "track"
@@ -42,18 +40,11 @@ const location = useLocation();
   }, [location]);
 
   return (
-    <section id="track"  className="pt-32 overflow-hidden  relative z-[1] ">
+    <section id="track" className="pt-32 overflow-hidden  relative z-[1] ">
       <div className="w-full  grid lg:flex  lg:flex-wrap  py-20   items-center ">
-      <h1
-        
-        className="text-2xl lg:text-5xl text-gray-600  font-semibold font-Trifelia mt-20 lg:mb-10 mb-4 px-4 w-full"
-      >
-        Track your shipment
-      </h1>
-      {/* <img src="https://www.commonsupport.com/html/Nasim/Vervoer/images/shape/shape-1.png" alt="shipment" className="absolute right-[1/2%] hidden lg:block -top-20 z-0" /> */}
         {/* Text Section */}
         <div
-          className="relative overflow-hidden z-1 max-w-7xl w-full rounded-r-full"
+          className="relative overflow-hidden  shadow-md z-1 max-w-7xl w-full lg:rounded-r-full"
           data-aos="fade-up"
           data-aos-duration="1000"
           data-aos-delay="100"
@@ -64,18 +55,14 @@ const location = useLocation();
             alt=""
             data-aos="fade-up"
             data-aos-duration="1000"
-            className="absolute top-0 bottom-0 end-0 h-full z-[-1] brightness-150"
+            className="hidden lg:block absolute top-0 bottom-0 end-0 h-full z-[-1] brightness-150"
           />
 
-          <div className="container">
-            <div className="relative flex justify-center items-center lg:gap-x-10 gap-5  ">
-              {/* Consult Button */}
-              <a
-                href="contact.html"
-                className="hidden lg:]flex items-center justify-center gap-2 absolute bottom-0 start-0 translate-x-7 btn btn-main hover-style-two button--stroke fw-semibold px-14 py-4 rounded-full"
-                data-block="button"
-              ></a>
-
+          {/* input */}
+          <div className="container flex flex-col">
+          
+            <div className="relative flex justify-center items-center lg:gap-x-10 mx-4 ">
+             
               {/* Circle Image */}
               <div className=" lg:max-w-[240px] max-w-[140px]  lg:max-h-[240px] max-h-[140px] rounded-full overflow-hidden border-8 border-white">
                 <img
@@ -83,32 +70,36 @@ const location = useLocation();
                   alt=""
                   data-aos="fade-up"
                   data-aos-duration="1000"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hidden lg:block"
                 />
               </div>
 
               {/* Track Order Form */}
               <form
-                  onSubmit={handleTrackOrder}
+                onSubmit={handleTrackOrder}
                 className="flex-grow py-16"
-               data-aos="fade-up"
+                data-aos="fade-up"
                 data-aos-duration="1000"
               >
-                <div
-                 className="flex gap-y-2 gap-x-4 my-5 lg:flex-row flex-col mr-8 ">
+                <h1 className="text-2xl lg:text-5xl text-gray-600  lg:text-white   font-semibold font-Trifelia mb-4  w-full">
+                Track your shipment
+              </h1>
+                <div className="flex flex-col lg:flex-row gap-y-2 gap-x-4 my-5  lg:mr-8  ">
+                  <div className="relative w-full">
                   <input
-                  required
-                   type="text"
-                   id="track"
-                   value={trackingId}
-                   onChange={(e) => setTrackingId(e.target.value)}
-                   placeholder="Enter your tracking ID"
-                    className="px-7 lg:py-3 py-1.5 bg-white font-Trifelia placeholder-gray-600 border-0 focus:outline-none w-full rounded shadow-none flex-grow"
+                    required
+                    type="text"
+                    id="track"
+                    value={trackingId}
+                    onChange={(e) => setTrackingId(e.target.value)}
+                    placeholder="Enter your tracking ID"
+                    className="px-7  lg:py-3 py-1.5 bg-white font-Trifelia  placeholder-gray-400 border placeholder:text-sm focus:outline-none w-full rounded shadow-none flex-grow"
                   />
+                    <IoIosSearch size={25} className="absolute right-1 top-2 lg:top-3 " />
+                    </div>
                   <button
-                     type="submit"
-                    className=" text-white bg-yellow-400 font-Trifelia text-xl lg:py-3 py-1 px-6 rounded lg:w-48 w-full "
-                    
+                    type="submit"
+                    className=" text-white bg-yellow-400 font-Trifelia text-lg lg:text-xl lg:w-1/3  lg:py-3 py-1 lg:px-6 px-4  rounded  whitespace-nowrap "
                   >
                     Track order
                   </button>
@@ -141,13 +132,13 @@ const location = useLocation();
             data-aos-duration="1000"
             className="absolute right-1/4 top-0"
           />
-          <img
+          {/* <img
             src="https://www.commonsupport.com/html/Nasim/Vervoer/images/shape/Frame.png"
             alt="cc"
             data-aos="fade-left"
             data-aos-duration="1000"
             className="absolute right-32 top-1/3"
-          />
+          /> */}
         </div>
       </div>
     </section>

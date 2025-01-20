@@ -48,7 +48,7 @@ const Hero = () => {
     <img
       src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/only-track.png"
       alt="Track"
-      className="absolute md:left-0 right-16 bottom-[1%]  max-w-[64%] z-50"
+      className="hidden lg:block absolute md:left-0 right-16 bottom-[1%]  max-w-[64%] z-50"
       style={{
         transform: `translateX(-326px) translateX(${scrollY * 0.3}px)`,
         transition: "transform 0.1s ease-out",
