@@ -59,7 +59,7 @@ const LanguageSwitcher = () => {
         } hover:text-yellow-400`}
       >
         {/* <CiLocationOn size={30} /> */}
-        <IoLanguageOutline className="" size={30} />
+        {/* <IoLanguageOutline className="" size={30} /> */}
       </div>
 
       {/* Dropdown */}

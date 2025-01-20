@@ -69,7 +69,8 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
             </Link>
             <Link
               to="/"
-              onClick={() => scrollToSection("about")}
+              onClick={()=>setOpenMenu(false)}
+              state={{ scrollTo: "track" }}
               className="text-2xl hover:text-yellow-500"
             >
               {t("Tracking")}
@@ -106,7 +107,7 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
                 }}
                 className="cursor-pointer py-2 px-4 rounded-lg hover:text-yellow-500"
               >
-                <IoLanguageOutline size={30} className="mx-10" />
+                {/* <IoLanguageOutline size={30} className="mx-10" /> */}
                 <div
                   className={`text-center mt-2 py-2 w-28 bg-white border-2 border-prtext-primary rounded-lg shadow-xl text-black z-50 transform transition-all duration-500 ease-in-out ${
                     isOpen
@@ -126,12 +127,12 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
                   >
                     Arabic
                   </div>
-                  <div
+                  {/* <div
                     className="block px-4 py-2 text-sm hover:bg-yellow-400/50 cursor-pointer"
                     onClick={() => changeLanguage("ku")}
                   >
                     Kurdish
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

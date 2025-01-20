@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import s from "/assets/img/bg-1.jpg";
 import WhyChooseUs from "../component/WhyChooseUs";
 import { useTranslation } from "react-i18next";

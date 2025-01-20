@@ -79,7 +79,7 @@ const TableWithSearch = ({ title, data, excludedFields, onShipClick, handleUpdat
                   </button>
                   <button
                     onClick={() => onDelete(item)}
-                    className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
+                    className="text-red-500 my-3 hover:underline ml-2 border-red-400 border rounded px-1"
                   >
                     Delete
                   </button>

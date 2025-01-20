@@ -1469,7 +1469,7 @@ const Section = ({
                         <td className=" px-4 py-2 text-center">
                           {item.ship_chek_point_note}
                         </td>
-                        <td className=" px-4 py-2 text-center">
+                        <td className=" px-4 py-2 text-center ">
                           <button
                             onClick={() => handleUpdateClick(title, item)} // Pass the item for update
                             className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
@@ -1478,7 +1478,7 @@ const Section = ({
                           </button>
                           <button
                             onClick={() => onDelete(item)}
-                            className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
+                            className="text-red-500 hover:underline ml-2 my-2 border-red-400 border rounded px-1"
                           >
                             Delete
                           </button>
@@ -1488,32 +1488,32 @@ const Section = ({
                 </tbody>
               </table>
               {/*  Ship item */}
-              <h1 className="font-inter text-3xl my-3">Ship Item</h1>
+              <h1 className="font-inter text-3xl my-3 whitespace-nowrap">Ship Item</h1>
               <table className=" w-full text-left border-collapse">
                 <thead>
                   <tr className=" border-b bg-gray-200">
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       Shing Mark
                     </th>
                     <th className=" px-4 py-2 text-sm text-gray-600 text-center">
                       cartons
                     </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       cbm
                     </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       item name
                     </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       wieght
                     </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       customer name
                     </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       customer contact Number
                     </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
                       date
                     </th>
                   </tr>
@@ -1529,10 +1529,7 @@ const Section = ({
                           {item.item_cartons}
                         </td>
                         <td className=" px-4 py-2 text-center relative">
-                          {item.item_cbm} m{" "}
-                          <span className="absolute top-2 rotate-0 text-xs">
-                            3
-                          </span>
+                          {item.item_cbm}
                         </td>
                         <td className=" px-4 py-2 text-center">
                           {item.item_name}

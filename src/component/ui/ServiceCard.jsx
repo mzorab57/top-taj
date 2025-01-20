@@ -63,7 +63,7 @@ const ServiceCard = () => {
             correct: checkMark,
           },
         ].map((servic, index) => (
-          <div key={index} className="place-self-center w-full">
+          <div key={servic.id} className="place-self-center w-full">
             <div
               className="bg-white h-60 relative shadow-lg border aos-init aos-animate overflow-hidden lg:overflow-visible"
               data-aos="fade-up"
@@ -86,7 +86,7 @@ const ServiceCard = () => {
                 <div className="mt-5 px-6 ">
                   <ul className="flex flex-col gap-3">
                     <li
-                      key={servic.id}
+                      
                       className="flex items-center gap-1 aos-init aos-animate"
                       data-aos="fade-up"
                       data-aos-duration="1000"
@@ -99,7 +99,7 @@ const ServiceCard = () => {
                       </span>
                     </li>
                     <li
-                      key={servic.id}
+                     
                       className="flex items-center gap-1 aos-init aos-animate"
                       data-aos="fade-up"
                       data-aos-duration="1000"

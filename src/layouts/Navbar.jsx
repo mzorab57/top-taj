@@ -5,7 +5,6 @@ import toptajLogo from "/assets/img/toptajLogo.jpg";
 import MobileMenu from "./MobileMenu";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
-import { CiLocationOn } from "react-icons/ci";
 import { Link, useLocation } from "react-router-dom"; // Import Link from react-router-dom
 import LanguageSwitcher from "../component/LanguageSwitcher";
 import { useTranslation } from "react-i18next"; // Import the useTranslation hook

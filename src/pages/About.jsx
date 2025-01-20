@@ -42,11 +42,11 @@ const About = () => {
   ];
   const locations = [
     { id: 1, top: "12%", left: "33%", address: "198 West 21th Street, New York" },
-    { id: 1, top: "25%", left: "52%", address: "198 West 21th Street, New York" },
-    { id: 1, top: "20%", left: "77%", address: "198 West 21th Street, New York" },
-    { id: 2, top: "70%", left: "30%", address: "4517 Washington Ave. Kentucky" },
-    { id: 2, top: "50%", left: "50%", address: "4517 Washington Ave. Kentucky" },
-    { id: 3, top: "65%", left: "85%", address: "3200 Highland Ave. California" },
+    { id: 2, top: "25%", left: "52%", address: "198 West 21th Street, New York" },
+    { id: 3, top: "20%", left: "77%", address: "198 West 21th Street, New York" },
+    { id: 4, top: "70%", left: "30%", address: "4517 Washington Ave. Kentucky" },
+    { id: 5, top: "50%", left: "50%", address: "4517 Washington Ave. Kentucky" },
+    { id: 6, top: "65%", left: "85%", address: "3200 Highland Ave. California" },
   ];
 
   const [scrollY, setScrollY] = useState(0);
