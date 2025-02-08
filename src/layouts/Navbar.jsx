@@ -56,7 +56,7 @@ const Navbar = () => {
     <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
       {/* Main Navbar */}
       <div
-        className={` flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full   `}
+        className={` flex flex-col justify-center max-w-[1700px] font-Jost   mx-auto  items-center    w-full   `}
       >
         {/* top */}
           <div
@@ -64,7 +64,7 @@ const Navbar = () => {
             color 
               ? "opacity-0  translate-y-[-100%] duration-200 ease-in transition-all"
               : "opacity-100 translate-y-0 duration-200 ease-out transition-all"
-          } flex font-inter justify-between items-center text-white text-sm py-4 px-1 max-w-[1095px] bg-transparent h-full w-full   `}
+          } flex font-Jost justify-between items-center text-white text-sm py-4 px-1 max-w-[1095px] bg-transparent h-full w-full   `}
         >
           {/* Location */}
        
@@ -114,7 +114,7 @@ const Navbar = () => {
             </div>
            
           {/* Navigation Menu */}
-          <ul className="hidden text-lg translate-x-5 w-full font-inter tracking-widest  lg:flex justify-start items-center space-x-10 rtl:space-x-10 h-full ">
+          <ul className="hidden text-lg translate-x-5 w-full font-Jost tracking-widest  lg:flex justify-start items-center space-x-10 rtl:space-x-10 h-full ">
            
             <li>
               <Link

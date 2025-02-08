@@ -23,9 +23,6 @@ const About = () => {
     }
   };
 
-  useEffect(() => {
-    AOS.init();
-  }, []);
 
   // ama bo awaya ka ka har shwenek click lasar icon location bkai yan Tracking la navbar aw henetawa sar section track bo search ka.
   useEffect(() => {
@@ -81,7 +78,7 @@ const About = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
               >
-                <h1 className="text-2xl lg:text-5xl text-gray-600  lg:text-white   font-semibold font-Trifelia mb-4  w-full">
+                <h1 className="text-2xl lg:text-5xl text-gray-600  lg:text-white   font-medium font-Jost mb-4  w-full">
                 Track your shipment
               </h1>
                 <div className="flex flex-col lg:flex-row gap-y-2 gap-x-4 my-5  lg:mr-8  ">
@@ -93,13 +90,13 @@ const About = () => {
                     value={trackingId}
                     onChange={(e) => setTrackingId(e.target.value)}
                     placeholder="Enter your tracking ID"
-                    className="px-7  lg:py-3 py-1.5 bg-white font-Trifelia  placeholder-gray-400 border placeholder:text-sm focus:outline-none w-full rounded shadow-none flex-grow"
+                    className="px-7  lg:py-3 py-1.5 bg-white font-Jost  placeholder-gray-400 border placeholder:text-sm focus:outline-none w-full rounded shadow-none flex-grow"
                   />
                     <IoIosSearch size={25} className="absolute right-1 top-2 lg:top-3 " />
                     </div>
                   <button
                     type="submit"
-                    className=" text-white bg-yellow-400 font-Trifelia text-lg lg:text-xl lg:w-1/3  lg:py-3 py-1 lg:px-6 px-4  rounded  whitespace-nowrap "
+                    className=" text-white bg-yellow-400 font-Jost text-lg lg:text-xl lg:w-1/3  lg:py-3 py-1 lg:px-6 px-4  rounded  whitespace-nowrap "
                   >
                     Track order
                   </button>

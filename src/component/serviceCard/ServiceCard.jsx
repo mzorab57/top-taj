@@ -86,27 +86,25 @@ const ServiceCard = () => {
                 <div className="mt-5 px-6 ">
                   <ul className="flex flex-col gap-3">
                     <li
-                      
                       className="flex items-center gap-1 aos-init aos-animate"
                       data-aos="fade-up"
                       data-aos-duration="1000"
                       data-aos-delay={200 + servic.id * 200}
                     >
                       {" "}
-                      <img src={servic.correct} alt="" srcset="" />
+                      <img src={servic.correct} alt="..." />
                       <span className="text-gray-500 font-medium text-sm">
                         {servic.li1}
                       </span>
                     </li>
                     <li
-                     
                       className="flex items-center gap-1 aos-init aos-animate"
                       data-aos="fade-up"
                       data-aos-duration="1000"
                       data-aos-delay={200 + servic.id * 200}
                     >
                       {" "}
-                      <img src={servic.correct} alt="" srcset="" />
+                      <img src={servic.correct} alt="..." />
                       <span className="text-gray-500 font-medium text-sm">
                         {servic.li1}
                       </span>

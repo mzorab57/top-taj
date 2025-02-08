@@ -1,12 +1,12 @@
 import React from "react";
-import { Route, Routes, Navigate  } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 import Hero from "../component/Hero";
 import Track from "../component/Track";
-import ServicesSection from "../pages/ServicesSection";
+import Services from "../pages/Services";
 import About from "../pages/About";
 import Dashboard from "../pages/Dashboard";
-import Tracking  from "../pages/Tracking";
+import Tracking from "../pages/Tracking";
 import Login from "../pages/Login";
 
 const PrivateRoute = ({ children }) => {
@@ -18,8 +18,15 @@ const AppRoutes = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<><Hero /> <Track/> </>} />
-        <Route path="/services" element={<ServicesSection />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero /> <Track />{" "}
+            </>
+          }
+        />
+        <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
         <Route
           path="/dashboard"

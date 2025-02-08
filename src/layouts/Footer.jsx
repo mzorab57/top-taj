@@ -16,7 +16,8 @@ const Footer = () => {
   return (
      <>
 
-     {location === "/dashboard"? "" : <footer name="contacts" className="bg-gray-900 text-white relative tracking-wider font-inter ">
+     {location === "/dashboard"? "" :
+      <footer name="contacts" className="bg-gray-900 text-white relative tracking-wider font-inter ">
        {/* Shape Weight Background */}
        <div className="absolute right-0 bottom-14 z-10">
          <img

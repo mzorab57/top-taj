@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         Bedug: ['"Bedug"', "sans"],
         Trifelia: ['"Trifelia"', "sans"],
+        Jost: ['"Jost"', "sans"],
       },
       colors: {
         primary: '#033647', // Define a primary color

@@ -46,14 +46,17 @@ const Hero = () => {
   >
     {/* Truck Image */}
     <img
-      src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/only-track.png"
-      alt="Track"
-      className="hidden lg:block absolute md:left-0 right-16 bottom-[1%]  max-w-[64%] z-50"
-      style={{
-        transform: `translateX(-326px) translateX(${scrollY * 0.3}px)`,
-        transition: "transform 0.1s ease-out",
-      }}
-    />
+  // src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/only-track.png"
+  src="/assets/img/plane-bg4.png"
+  alt="Track"
+  className="hidden lg:block absolute md:left-16 w-[42rem]  -bottom-[8%] mt-8 max-w-[64%] z-50  "
+  style={{
+    transform: `translateX(-326px) translateX(${scrollY * 0.3}px)`,
+    transition: "transform 0.1s ease-out",
+    filter: "drop-shadow(0 10px 20px rgba(0.9, 0.9, 0.9, 0.9))", // Strong bottom shadow
+  }}
+/>
+
 
     {/* Curve Road */}
     <img
@@ -87,22 +90,23 @@ const Hero = () => {
 <div className="container max-w-2xl mx-auto absolute lg:left-1/2 px-2 sm:pt-44 pt-56 ">
   <div className="flex flex-col lg:flex-row justify-center items-center h-full mt-16 lg:mt-32">
     <div className="text-start lg:text-left">
-      <span className="text-lg font-Trifelia  text-yellow-400 underline mb-5 block">
+      <span className="text-lg font-Jost  text-yellow-400 underline mb-5 block">
         Safe Transportation & Logistics
       </span>
       <h1
        data-aos="zoom-in"
         data-aos-duration="1500"
-       className="text-white text-4xl  lg:text-5xl xl:text-7xl leading-10 font-Bedug font-bold  ">
+       className="text-white text-4xl  lg:text-5xl xl:text-7xl leading-10 font-Jost font-medium  ">
         Flexible Logistics, Fast Delivery, & Secure Packages
       </h1>
       <div className="flex gap-6 mt-8 flex-wrap justify-start">
         {/* View Services Button */}
         <Link
-           onClick={()=> scrollToAbout("about")}
+          to="/"
+          state={{ scrollTo: "track" }}
           className="btn btn-main hover-style-two button--stroke flex items-center gap-4 group active:translate-y-2"
         >
-          <div className="text-xl  font-Trifelia bg-yellow-400 px-6 py-3 text-white rounded tracking-wider flex justify-start items-center">Tracking
+          <div className="text-xl  font-Jost bg-yellow-400 px-6 py-3 text-white rounded tracking-wider flex justify-start items-center">Tracking
            <span><FaCircleArrowDown size={25} className="ml-2" /></span> 
           </div>
          
@@ -111,7 +115,7 @@ const Hero = () => {
         {/* Who We Are Link */}
         <Link
           to="/about"
-          className="flex items-center gap-2 text-white font-Trifelia  active:translate-y-2"
+          className="flex items-center gap-2 text-white font-Jost  active:translate-y-2"
           data-aos="fade-up"
           data-aos-duration="1000"
           data-aos-delay="400"
