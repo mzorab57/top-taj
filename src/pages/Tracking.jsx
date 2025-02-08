@@ -72,6 +72,7 @@ const AppProvider = ({ children }) => {
 const ShipmentTracker = () => {
   const { id } = useParams(); // Get `id` from the URL
   const { state, fetchData } = useAppContext();
+ console.log(state.item);
  
   //  console.log(location.split(0,3)[0]);
   // Fetch shipment data on mount
@@ -116,6 +117,7 @@ const ShipmentTracker = () => {
         if (stepIndex !== -1) {
           steps[stepIndex].completed = true;
           steps[stepIndex].landPoint = checkPoint.ship_chek_point_land_point; // Add land point to the step
+          steps[stepIndex].landPointDate = checkPoint.ship_check_point_date; // Add date point to the step
         }
       }
     });
@@ -182,17 +184,21 @@ const ShipmentTracker = () => {
                 }`}
               >
                 {step.label} <CgArrowRight size={17} className="mx-1" />
-                {step.landPoint && (
+                {step.landPoint && (<div className="relative">
                   <span className="block text-sm text-blue-500/50">
                     ({step.landPoint})
                   </span>
+                  <span className="absolute w-20 text-sm text-gray-500/50">
+                    {step.landPointDate}
+                  </span>
+                  </div>
                 )}
               </div>
             ))}
           </div>
 
           {/* text swr */}
-          <div className="flex flex-col gap-y-[27rem] ml-20 mt-6 text-sm text-gray-500">
+          <div className="flex flex-col gap-y-[27rem] ml-10  mt-6 text-sm text-gray-500">
             <div>
               <p className="font-medium">Origin</p>
               <p className="font-medium text-red-500">

@@ -3,6 +3,8 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import ShipmentTracker from "./Tracking";
 import TableWithSearch from "../component/ui/TableWithSearch";
+import ShipDetailsTable from "../component/shipDetailTable/ShipDetailsTable";
+import ShipCheckPointForm from "../component/shipCheckPointForm/ShipCheckPointForm";
 
 const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
 
@@ -431,12 +433,12 @@ const AdminDashboard = () => {
   return (
     <>
       <div
-        className={`container mx-auto p-4 bg-gray-100 min-h-screen mt-44 relative `}
+        className={`container mx-auto p-4 bg-gray-100 min-h-screen pt-60 relative `}
       >
         <div className="w-ful flex justify-end">
           <button
             onClick={handleLogout}
-            className="text-red-400  px-2 mb-5  md:absolute right-5 text-lg rounded top-7  hover:bg-red-500 hover:text-white"
+            className="text-red-400  px-2 mb-5  md:absolute right-5 text-lg rounded top-7 md:bottom-96   hover:text-red-600"
           >
             Logout
           </button>
@@ -1226,7 +1228,7 @@ const Section = ({
     );
   }
 
-  // Define excluded fields dynamically for the table headers and data
+  // Define excluded fields dynamically for the table headers and data bo header table kan ka ch column pshan bdre
   const excludedFields = (() => {
     switch (title) {
       case "admin":
@@ -1268,86 +1270,87 @@ const Section = ({
       </h2>
 
       {/* Add ship chek point */}
-      {title === "ship_chek_point" ? (
-        <form
-          onSubmit={(e) => onAddChekPoint(e)}
-          className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5"
-        >
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">Ship Code</label>
-            <select
-              required
-              name="ship_id"
-              value={modalData.ship_id || ""}
-              onChange={onChange}
-              className="w-full border rounded px-3 py-2 bg-slate-50"
-            >
-              <option value="">Select Ship</option>
-              {dataShip &&
-                dataShip.map((ship) => (
-                  <option key={ship.ship_id} value={ship.ship_id}>
-                    {ship.ship_code}
-                  </option>
-                ))}
-            </select>
-          </div>
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">
-              Landing Point
-            </label>
-            <input
-              required
-              type="text"
-              name="ship_chek_point_land_point"
-              value={modalData.ship_chek_point_land_point || ""}
-              onChange={onChange}
-              className="w-full border rounded px-3 py-2 bg-slate-50"
-            />
-          </div>
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">Ship Status</label>
-            <select
-              required
-              name="ship_chek_point_note"
-              value={modalData.ship_chek_point_note || ""}
-              onChange={onChange}
-              className="w-full border rounded px-3 py-2 bg-slate-50"
-            >
-              <option value="" disabled>
-                Select a status
-              </option>
-              <option value="Created">Created</option>
-              <option value="Collected">Collected</option>
-              <option value="Departed">Departed</option>
-              <option value="In transit">In transit</option>
-              <option value="Arrived at destination">
-                Arrived at destination
-              </option>
-              <option value="Out for delivery">Out for delivery</option>
-              <option value="Delivered">Delivered</option>
-            </select>
-          </div>
+      {title === "ship_chek_point" ? ( 
+         <ShipCheckPointForm title={title} modalData={modalData} dataShip={dataShip} onChange={onChange} onAddChekPoint={onAddChekPoint} />
+        // <form
+        //   onSubmit={(e) => onAddChekPoint(e)}
+        //   className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5"
+        // >
+        //   <div className="mb-4 w-full">
+        //     <label className="block text-sm font-medium mb-2">Ship Code</label>
+        //     <select
+        //       required
+        //       name="ship_id"
+        //       value={modalData.ship_id || ""}
+        //       onChange={onChange}
+        //       className="w-full border rounded px-3 py-2 bg-slate-50"
+        //     >
+        //       <option value="">Select Ship</option>
+        //       {dataShip &&
+        //         dataShip.map((ship) => (
+        //           <option key={ship.ship_id} value={ship.ship_id}>
+        //             {ship.ship_code}
+        //           </option>
+        //         ))}
+        //     </select>
+        //   </div>
+        //   <div className="mb-4 w-full">
+        //     <label className="block text-sm font-medium mb-2">
+        //       Landing Point
+        //     </label>
+        //     <input
+        //       required
+        //       type="text"
+        //       name="ship_chek_point_land_point"
+        //       value={modalData.ship_chek_point_land_point || ""}
+        //       onChange={onChange}
+        //       className="w-full border rounded px-3 py-2 bg-slate-50"
+        //     />
+        //   </div>
+        //   <div className="mb-4 w-full">
+        //     <label className="block text-sm font-medium mb-2">Ship Status</label>
+        //     <select
+        //       required
+        //       name="ship_chek_point_note"
+        //       value={modalData.ship_chek_point_note || ""}
+        //       onChange={onChange}
+        //       className="w-full border rounded px-3 py-2 bg-slate-50"
+        //     >
+        //       <option value="" disabled>
+        //         Select a status
+        //       </option>
+        //       <option value="Created">Created</option>
+        //       <option value="Collected">Collected</option>
+        //       <option value="Departed">Departed</option>
+        //       <option value="In transit">In transit</option>
+        //       <option value="Arrived at destination">
+        //         Arrived at destination
+        //       </option>
+        //       <option value="Out for delivery">Out for delivery</option>
+        //       <option value="Delivered">Delivered</option>
+        //     </select>
+        //   </div>
 
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2">Date</label>
-            <input
-              required
-              type="date"
-              name="ship_check_point_date"
-              value={modalData.ship_check_point_date || ""}
-              onChange={onChange}
-              className="w-full border rounded px-3 py-2 bg-slate-50"
-            />
-          </div>
-          <div className=" place-self-center w-full mt-4">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 w-full lg:w-fit  rounded hover:bg-blue-600"
-            >
-              Add Landing Point
-            </button>
-          </div>
-        </form>
+        //   <div className="mb-4 w-full">
+        //     <label className="block text-sm font-medium mb-2">Date</label>
+        //     <input
+        //       required
+        //       type="date"
+        //       name="ship_check_point_date"
+        //       value={modalData.ship_check_point_date || ""}
+        //       onChange={onChange}
+        //       className="w-full border rounded px-3 py-2 bg-slate-50"
+        //     />
+        //   </div>
+        //   <div className=" place-self-center w-full mt-4">
+        //     <button
+        //       type="submit"
+        //       className="bg-blue-500 text-white px-4 py-2 w-full lg:w-fit  rounded hover:bg-blue-600"
+        //     >
+        //       Add Landing Point
+        //     </button>
+        //   </div>
+        // </form>
       ) : (
         <>
           {title !== "shipDetail" ? (
@@ -1431,126 +1434,128 @@ const Section = ({
             // </>
             <TableWithSearch title={title} data={data} excludedFields={excludedFields} onShipClick={onShipClick} handleUpdateClick={handleUpdateClick} onDelete={onDelete} onChangeState={onChangeState} onAddClick={onAddClick}  />
           ) : (
-            <div className="overflow-x-auto">
-              <h1 className="font-inter text-3xl">Ship land Point</h1>
-              <table className="  w-full text-left border-collapse my-7">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      ship_code
-                    </th>
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      ship_chek_point_land_point
-                    </th>
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      ship_check_point_date
-                    </th>
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      ship_chek_point_note
-                    </th>
-                    <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {shipDetailData.ship_chek_point &&
-                    shipDetailData.ship_chek_point.map((item, index) => (
-                      <tr key={index} className="border-b text-black">
-                        <td className=" px-4 py-2 text-center">
-                          {item.ship_code}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.ship_chek_point_land_point}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.ship_check_point_date}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.ship_chek_point_note}
-                        </td>
-                        <td className=" px-4 py-2 text-center ">
-                          <button
-                            onClick={() => handleUpdateClick(title, item)} // Pass the item for update
-                            className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
-                          >
-                            Update
-                          </button>
-                          <button
-                            onClick={() => onDelete(item)}
-                            className="text-red-500 hover:underline ml-2 my-2 border-red-400 border rounded px-1"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              {/*  Ship item */}
-              <h1 className="font-inter text-3xl my-3 whitespace-nowrap">Ship Item</h1>
-              <table className=" w-full text-left border-collapse">
-                <thead>
-                  <tr className=" border-b bg-gray-200">
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      Shing Mark
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-                      cartons
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      cbm
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      item name
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      wieght
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      customer name
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      customer contact Number
-                    </th>
-                    <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-                      date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {shipDetailData.ship_item &&
-                    shipDetailData.ship_item.map((item, index) => (
-                      <tr key={index} className="border-b text-black">
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_mark}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_cartons}
-                        </td>
-                        <td className=" px-4 py-2 text-center relative">
-                          {item.item_cbm}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_name}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_wieght} kg
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_owner_name}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_owner_phone}
-                        </td>
-                        <td className=" px-4 py-2 text-center">
-                          {item.item_date}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+            // <div className="overflow-x-auto">
+            //   <h1 className="font-inter text-3xl">Ship land Point</h1>
+            //   <table className="  w-full text-left border-collapse my-7">
+            //     <thead>
+            //       <tr className="bg-gray-200">
+            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+            //           ship_code
+            //         </th>
+            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+            //           ship_chek_point_land_point
+            //         </th>
+            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+            //           ship_check_point_date
+            //         </th>
+            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+            //           ship_chek_point_note
+            //         </th>
+            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
+            //           Action
+            //         </th>
+            //       </tr>
+            //     </thead>
+            //     <tbody>
+            //       {shipDetailData.ship_chek_point &&
+            //         shipDetailData.ship_chek_point.map((item, index) => (
+            //           <tr key={index} className="border-b text-black">
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.ship_code}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.ship_chek_point_land_point}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.ship_check_point_date}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.ship_chek_point_note}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center ">
+            //               <button
+            //                 onClick={() => handleUpdateClick(title, item)} // Pass the item for update
+            //                 className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
+            //               >
+            //                 Update
+            //               </button>
+            //               <button
+            //                 onClick={() => onDelete(item)}
+            //                 className="text-red-500 hover:underline ml-2 my-2 border-red-400 border rounded px-1"
+            //               >
+            //                 Delete
+            //               </button>
+            //             </td>
+            //           </tr>
+            //         ))}
+            //     </tbody>
+            //   </table>
+
+            //   {/*  Ship item */}
+            //   <h1 className="font-inter text-3xl my-3 whitespace-nowrap">Ship Item</h1>
+            //   <table className=" w-full text-left border-collapse">
+            //     <thead>
+            //       <tr className=" border-b bg-gray-200">
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           Shing Mark
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center">
+            //           cartons
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           cbm
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           item name
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           wieght
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           customer name
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           customer contact Number
+            //         </th>
+            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
+            //           date
+            //         </th>
+            //       </tr>
+            //     </thead>
+            //     <tbody>
+            //       {shipDetailData.ship_item &&
+            //         shipDetailData.ship_item.map((item, index) => (
+            //           <tr key={index} className="border-b text-black">
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_mark}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_cartons}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center relative">
+            //               {item.item_cbm}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_name}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_wieght} kg
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_owner_name}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_owner_phone}
+            //             </td>
+            //             <td className=" px-4 py-2 text-center">
+            //               {item.item_date}
+            //             </td>
+            //           </tr>
+            //         ))}
+            //     </tbody>
+            //   </table>
+            // </div>
+            <ShipDetailsTable shipDetailData={shipDetailData} handleUpdateClick={handleUpdateClick} onDelete={onDelete}   title={title}  />
           )}
         </>
       )}
