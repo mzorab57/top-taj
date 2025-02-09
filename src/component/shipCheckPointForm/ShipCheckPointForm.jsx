@@ -1,6 +1,24 @@
-import React from 'react';
+import React from "react";
 
-const ShipCheckPointForm = ({ title, modalData, dataShip, onChange, onAddChekPoint }) => {
+const statuses = [
+  { value: "Created", label: "Created" },
+  { value: "Collected", label: "Collected" },
+  { value: "Departed", label: "Departed" },
+  { value: "In transit", label: "In transit" },
+  { value: "Arrived at destination", label: "Arrived at destination" },
+  { value: "Out for delivery", label: "Out for delivery" },
+  { value: "Delivered", label: "Delivered" },
+];
+
+const ShipCheckPointForm = ({
+  title,
+  modalData,
+  dataShip,
+  usedStatuses = [], // Array of statuses already used for the selected ship
+  onChange,
+  onAddChekPoint,
+}) => {
+  // When a ship code is selected, the parent component should update the usedStatuses accordingly.
   return (
     <>
       {title === "ship_chek_point" && (
@@ -48,22 +66,31 @@ const ShipCheckPointForm = ({ title, modalData, dataShip, onChange, onAddChekPoi
               onChange={onChange}
               className="w-full border rounded px-3 py-2 bg-slate-50"
             >
-              <option value="" disabled>Select a status</option>
-              <option value="Created">Created</option>
-              <option value="Collected">Collected</option>
-              <option value="Departed">Departed</option>
-              <option value="In transit">In transit</option>
-              <option value="Arrived at destination">Arrived at destination</option>
-              <option value="Out for delivery">Out for delivery</option>
-              <option value="Delivered">Delivered</option>
+              <option value="" disabled>
+                Select a status
+              </option>
+              {statuses.map((status) => {
+                const isUsed = usedStatuses.includes(status.value);
+                return (
+                  <option
+                    key={status.value}
+                    value={status.value}
+                    disabled={isUsed}
+                    style={{ color: isUsed ? "green" : "black" }}
+                  >
+                    {isUsed ? "✓ " : ""}
+                    {status.label}
+                  </option>
+                );
+              })}
             </select>
           </FormGroup>
 
-          {/* Date Input */}
-          <FormGroup label="Date">
+          {/* Date & Time Input */}
+          <FormGroup label="Date & Time">
             <input
               required
-              type="date"
+              type="datetime-local"
               name="ship_check_point_date"
               value={modalData.ship_check_point_date || ""}
               onChange={onChange}

@@ -6,7 +6,7 @@ import TableWithSearch from "../component/ui/TableWithSearch";
 import ShipDetailsTable from "../component/shipDetailTable/ShipDetailsTable";
 import ShipCheckPointForm from "../component/shipCheckPointForm/ShipCheckPointForm";
 
-const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
+const API_HOST = "https://lightcyan-scorpion-333008.hostingersite.com/api/";
 
 // State Management with useReducer
 const initialState = {
@@ -145,6 +145,8 @@ const AdminDashboard = () => {
   const [modalData, setModalData] = React.useState({});
   const [shipDetailData, setShipDetailData] = React.useState({});
   const [modalEntity, setModalEntity] = React.useState("");
+  const storedAdminData = localStorage.getItem("adminData");
+  const adminData = JSON.parse(storedAdminData);
 
   React.useEffect(() => {
     fetchData("admin", "admin/read.php");
@@ -194,7 +196,7 @@ const AdminDashboard = () => {
         ship_destination: "",
         ship_start_date: "",
         ship_end_date: "",
-        admin_id: 1,
+        admin_id: adminData.admin_id,
       });
     } else if (entity === "updateShip") {
       setModalData({
@@ -202,7 +204,7 @@ const AdminDashboard = () => {
         ship_londing_area: data.ship_londing_area,
         ship_destination: data.ship_destination,
         ship_id: data.ship_id,
-        admin_id: 5,
+        admin_id: adminData.admin_id,
       });
     } else if (entity === "item") {
       setModalData({
@@ -231,7 +233,7 @@ const AdminDashboard = () => {
     } else if (entity === "ship_chek_point") {
       console.log("ship_chek_point");
       setModalData({
-        admin_id: "1",
+        admin_id: adminData.admin_id,
         ship_id: "",
         ship_chek_point_land_point: "",
         ship_chek_point_note: "",
@@ -240,7 +242,7 @@ const AdminDashboard = () => {
     } else if (entity === "updateship_chek_point") {
       console.log(" update ship_chek_point");
       setModalData({
-        admin_id: "1",
+        admin_id: adminData.admin_id,
         ship_id: data.ship_id,
         ship_chek_point_land_point: data.ship_chek_point_land_point,
         ship_chek_point_note: data.ship_chek_point_note,
@@ -378,7 +380,7 @@ const AdminDashboard = () => {
           ship_londing_area: data.ship_londing_area,
           ship_destination: data.ship_destination,
           ship_id: data.ship_id,
-          admin_id: 1,
+          admin_id: adminData.admin_id,
         };
         const endpoint = `${entity}/update.php`;
         await updateEntity(entity, endpoint, dataUpdate);
@@ -404,7 +406,7 @@ const AdminDashboard = () => {
       } else if (modalEntity === "updateship_chek_point") {
         console.log(" update ship_chek_point");
         const dataUpdate = {
-          admin_id: "1",
+          admin_id: adminData.admin_id,
           ship_id: data.ship_id,
           ship_chek_point_land_point: data.ship_chek_point_land_point,
           ship_chek_point_note: data.ship_chek_point_note,
@@ -425,7 +427,7 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("adminData");
     navigate("/login");
   };
 
@@ -433,12 +435,12 @@ const AdminDashboard = () => {
   return (
     <>
       <div
-        className={`container mx-auto p-4 bg-gray-100 min-h-screen pt-60 relative `}
+        className={`container mx-auto p-4 bg-gray-100 max-w-[1700px] min-h-screen pt-60 relative `}
       >
-        <div className="w-ful flex justify-end">
+        <div className="w-full mb-6 flex justify-end">
           <button
             onClick={handleLogout}
-            className="text-red-400  px-2 mb-5  md:absolute right-5 text-lg rounded top-7 md:bottom-96   hover:text-red-600"
+            className="text-red-400   px-2  text-lg rounded   hover:bg-red-400 duration-300  hover:text-white "
           >
             Logout
           </button>
@@ -454,8 +456,18 @@ const AdminDashboard = () => {
           </p>
         ) : (
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card title="Admins" onClick={() => handleCardClick("admin")} />
+            <div
+              className={`grid grid-cols-1 md:grid-cols-2  gap-6 mb-8 ${
+                adminData.admin_role === "admin"
+                  ? "lg:grid-cols-4"
+                  : "lg:grid-cols-3"
+              }`}
+            >
+              {adminData.admin_role === "admin" ? (
+                <Card title="Admins" onClick={() => handleCardClick("admin")} />
+              ) : (
+                ""
+              )}
               <Card title="Ships" onClick={() => handleCardClick("ship")} />
               <Card title="Items" onClick={() => handleCardClick("item")} />
               <Card
@@ -717,11 +729,11 @@ const AdminDashboard = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Start Date
+                  Start Date & Time
                 </label>
                 <input
                   required
-                  type="date"
+                  type="datetime-local"
                   name="ship_start_date"
                   value={modalData.ship_start_date || ""}
                   onChange={handleInputChange}
@@ -730,11 +742,11 @@ const AdminDashboard = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  End Date
+                  End Date & Time
                 </label>
                 <input
                   required
-                  type="date"
+                  type="datetime-local"
                   name="ship_end_date"
                   value={modalData.ship_end_date || ""}
                   onChange={handleInputChange}
@@ -960,10 +972,12 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Date</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Date & Time
+                  </label>
                   <input
                     required
-                    type="date"
+                    type="datetime-local"
                     name="item_date"
                     value={modalData.item_date || ""}
                     onChange={handleInputChange}
@@ -1270,8 +1284,15 @@ const Section = ({
       </h2>
 
       {/* Add ship chek point */}
-      {title === "ship_chek_point" ? ( 
-         <ShipCheckPointForm title={title} modalData={modalData} dataShip={dataShip} onChange={onChange} onAddChekPoint={onAddChekPoint} />
+      {title === "ship_chek_point" ? (
+        <ShipCheckPointForm
+          title={title}
+          modalData={modalData}
+          dataShip={dataShip}
+          onChange={onChange}
+          onAddChekPoint={onAddChekPoint}
+        />
+      ) : (
         // <form
         //   onSubmit={(e) => onAddChekPoint(e)}
         //   className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5"
@@ -1351,7 +1372,6 @@ const Section = ({
         //     </button>
         //   </div>
         // </form>
-      ) : (
         <>
           {title !== "shipDetail" ? (
             // <>
@@ -1432,7 +1452,16 @@ const Section = ({
             //     </table>
             //   </div>
             // </>
-            <TableWithSearch title={title} data={data} excludedFields={excludedFields} onShipClick={onShipClick} handleUpdateClick={handleUpdateClick} onDelete={onDelete} onChangeState={onChangeState} onAddClick={onAddClick}  />
+            <TableWithSearch
+              title={title}
+              data={data}
+              excludedFields={excludedFields}
+              onShipClick={onShipClick}
+              handleUpdateClick={handleUpdateClick}
+              onDelete={onDelete}
+              onChangeState={onChangeState}
+              onAddClick={onAddClick}
+            />
           ) : (
             // <div className="overflow-x-auto">
             //   <h1 className="font-inter text-3xl">Ship land Point</h1>
@@ -1555,7 +1584,12 @@ const Section = ({
             //     </tbody>
             //   </table>
             // </div>
-            <ShipDetailsTable shipDetailData={shipDetailData} handleUpdateClick={handleUpdateClick} onDelete={onDelete}   title={title}  />
+            <ShipDetailsTable
+              shipDetailData={shipDetailData}
+              handleUpdateClick={handleUpdateClick}
+              onDelete={onDelete}
+              title={title}
+            />
           )}
         </>
       )}

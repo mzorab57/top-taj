@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import Hero from "../component/Hero";
@@ -10,8 +10,8 @@ import Tracking from "../pages/Tracking";
 import Login from "../pages/Login";
 
 const PrivateRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("isLoggedIn"); // Check login status
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  const storedAdminData = localStorage.getItem("adminData");
+  return storedAdminData ? children : <Navigate to="/login" />;
 };
 
 const AppRoutes = () => {

@@ -9,7 +9,10 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -18,13 +21,20 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://azure-echidna-419544.hostingersite.com/api/login.php",
+        "https://lightcyan-scorpion-333008.hostingersite.com/api/login.php",
         formData
       );
 
       console.log(response.data);
       if (response.data.status === "ok") {
-            localStorage.setItem("isLoggedIn", response.data.admin_role);
+        // Group the admin data into one object
+        const adminData = {
+          admin_id: response.data.admin_id,
+          admin_name: response.data.admin_name,
+          admin_role: response.data.admin_role,
+        };
+        // Store the object in localStorage
+        localStorage.setItem("adminData", JSON.stringify(adminData));
         navigate("/dashboard"); // Redirect to the dashboard on success
       } else {
         setError(response.data.message || "Login failed");
@@ -37,15 +47,10 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-96"
-      >
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
         <h2 className="text-xl font-bold mb-4">Admin Login</h2>
 
-        {error && (
-          <div className="text-red-500 text-sm mb-4">{error}</div>
-        )}
+        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Admin Name</label>

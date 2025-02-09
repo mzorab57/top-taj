@@ -15,7 +15,8 @@ const Navbar = () => {
   const [isOpenMenu, setOpenMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const isAuthenticated = localStorage.getItem("isLoggedIn");
+  const storedAdminData = localStorage.getItem("adminData");
+  const adminData = JSON.parse(storedAdminData);
 
    // Function to scroll to the about section
    const scrollToSection = () => {
@@ -149,7 +150,7 @@ const Navbar = () => {
                 {t("contacts")}
               </Link>
             </li>
-            {isAuthenticated ?    <li>
+            {adminData ?    <li>
               <Link
                 to="/dashboard"
                 className="hover:text-yellow-400 cursor-pointer"
