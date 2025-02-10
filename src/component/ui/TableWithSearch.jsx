@@ -32,8 +32,8 @@ const TableWithSearch = ({ title, data, excludedFields, onShipClick, handleUpdat
         Add New {title}
       </button>
 
-      <div className="overflow-auto">
-        <table className="table-auto w-full text-left border-collapse">
+      <div className="overflow-auto ">
+        <table className="table-auto w-full text-left border-collapse cursor-pointer  mb-5">
           <thead>
             <tr className="bg-gray-200">
               {data.length > 0 &&

@@ -1,6 +1,8 @@
 import React from "react";
 
 const ShipDetailsTable = ({ shipDetailData, handleUpdateClick, onDelete, title }) => {
+
+  // fetchData("ship", "ship/read.php");
   return (
     <div className="overflow-x-auto">
       {/* Ship Check Points Table */}
@@ -17,7 +19,7 @@ const ShipDetailsTable = ({ shipDetailData, handleUpdateClick, onDelete, title }
         </thead>
         <tbody>
           {shipDetailData.ship_chek_point?.map((item, index) => (
-            <tr key={index} className="border-b text-black">
+            <tr key={index} className="border-b text-black hover:bg-gray-100 ">
               <td className="px-4 py-2 text-center">{item.ship_code}</td>
               <td className="px-4 py-2 text-center">{item.ship_chek_point_land_point}</td>
               <td className="px-4 py-2 text-center">{item.ship_check_point_date}</td>
@@ -43,7 +45,7 @@ const ShipDetailsTable = ({ shipDetailData, handleUpdateClick, onDelete, title }
 
       {/* Ship Items Table */}
       <h1 className="font-inter text-3xl my-3 whitespace-nowrap">Ship Item</h1>
-      <table className="w-full text-left border-collapse">
+      <table className="w-full text-left border-collapse mb-3">
         <thead>
           <tr className="border-b bg-gray-200">
             <th className="px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">Shipping Mark</th>
@@ -58,7 +60,7 @@ const ShipDetailsTable = ({ shipDetailData, handleUpdateClick, onDelete, title }
         </thead>
         <tbody>
           {shipDetailData.ship_item?.map((item, index) => (
-            <tr key={index} className="border-b text-black">
+            <tr key={index} className="border-b text-black hover:bg-gray-100 ">
               <td className="px-4 py-2 text-center">{item.item_mark}</td>
               <td className="px-4 py-2 text-center">{item.item_cartons}</td>
               <td className="px-4 py-2 text-center relative">{item.item_cbm}</td>

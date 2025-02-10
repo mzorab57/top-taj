@@ -2,14 +2,12 @@ import React from "react";
 import {
   FaFacebook,
   FaInstagram,
-  FaTwitter,
-  FaDribbble,
   FaPhone,
   FaEnvelope,
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import topTajLogo from "/assets/img/toptajLogo.jpg";
+import topTajLogo from "/assets/img/TOPTAJCARGOPSD.png";
 
 const Footer = () => {
   const location = useLocation().pathname
@@ -30,19 +28,18 @@ const Footer = () => {
        {/* Footer Top */}
        <div className="py-24">
          <div className="container mx-auto px-4">
-           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 overflow-hidden">
              {/* About Widget */}
-             <div className="space-y-4">
+             <div className="space-y-4 text-center ">
                <a href="/">
                  <img
                    src={topTajLogo}
                    alt="Footer Logo"
-                   className="mb-6"
+                   className="scale-150"
                  />
                </a>
-               <p className="text-gray-400">
-                 Lorem Ipsum is simply dummy text of the printing and typesetting
-                 industry.
+               <p className="text-gray-400  ">
+                 TopTaj Cargo International Transportaion.
                </p>
              
              </div>
@@ -115,7 +112,7 @@ const Footer = () => {
                    >
                      <FaInstagram />
                    </a>
-                   <a
+                   {/* <a
                      href="#"
                      className="text-gray-400 hover:text-white text-xl"
                    >
@@ -126,7 +123,7 @@ const Footer = () => {
                      className="text-gray-400 hover:text-white text-xl"
                    >
                      <FaDribbble />
-                   </a>
+                   </a> */}
                  </div>
                </div>
              </div>

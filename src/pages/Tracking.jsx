@@ -4,7 +4,7 @@ import axios from "axios";
 import { CgArrowRight } from "react-icons/cg";
 
 // API host URL
-const API_HOST = "https://azure-echidna-419544.hostingersite.com/api/";
+const API_HOST = "https://lightcyan-scorpion-333008.hostingersite.com/api/";
 
 // Initial state for the reducer
 const initialState = {
@@ -92,7 +92,7 @@ const ShipmentTracker = () => {
     "In transit": "In transit",
     "Arrived at destination": "Arrived at destination",
     "Out for delivery": "Out for delivery",
-    Delivered: "Delivered",
+     Delivered: "Delivered",
   };
 
   const steps = [
@@ -127,7 +127,7 @@ const ShipmentTracker = () => {
   
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md overflow-hidden h-screen mt-20 flex justify-center items-center ">
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md overflow-hidden h-screen mt-32 flex justify-center items-center ">
       <div>
         {/* <img src={topTajLogo} alt="Footer Logo" className="mb-6" /> */}
 

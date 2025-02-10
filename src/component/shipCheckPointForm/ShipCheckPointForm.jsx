@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const statuses = [
   { value: "Created", label: "Created" },
@@ -14,11 +14,25 @@ const ShipCheckPointForm = ({
   title,
   modalData,
   dataShip,
-  usedStatuses = [], // Array of statuses already used for the selected ship
   onChange,
   onAddChekPoint,
 }) => {
-  // When a ship code is selected, the parent component should update the usedStatuses accordingly.
+  // Store the selected ship as an object rather than an array.
+  const [selectedShip, setSelectedShip] = useState(null);
+
+  // Handler for when a ship code is selected.
+  // It updates the form data and then retrieves the full data for the selected ship.
+  const handleShipCodeChange = (e) => {
+    onChange(e); // Update modalData in the parent component
+    const selectedShipId = e.target.value;
+    // Find the selected ship in the dataShip array
+    const ship = dataShip.find(
+      (ship) => String(ship.ship_id) === selectedShipId
+    );
+    console.log("Selected ship data:", ship);
+    setSelectedShip(ship);
+  };
+
   return (
     <>
       {title === "ship_chek_point" && (
@@ -32,7 +46,7 @@ const ShipCheckPointForm = ({
               required
               name="ship_id"
               value={modalData.ship_id || ""}
-              onChange={onChange}
+              onChange={handleShipCodeChange}
               className="w-full border rounded px-3 py-2 bg-slate-50"
             >
               <option value="">Select Ship</option>
@@ -70,7 +84,20 @@ const ShipCheckPointForm = ({
                 Select a status
               </option>
               {statuses.map((status) => {
-                const isUsed = usedStatuses.includes(status.value);
+                const isUsed =
+                  selectedShip &&
+                  selectedShip.ship_chek_point &&
+                  selectedShip.ship_chek_point.some((note) => {
+                    if (typeof note === "object" && note !== null) {
+                      // Assume the status string is stored in note.ship_chek_point_note
+                      return (
+                        note.ship_chek_point_note &&
+                        String(note.ship_chek_point_note).includes(status.value)
+                      );
+                    }
+                    // If note is a primitive (e.g., string)
+                    return String(note).includes(status.value);
+                  });
                 return (
                   <option
                     key={status.value}

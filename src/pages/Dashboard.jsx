@@ -1,10 +1,16 @@
 import React, { useReducer, useContext, createContext } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import ShipmentTracker from "./Tracking";
+import { useNavigate } from "react-router-dom";
 import TableWithSearch from "../component/ui/TableWithSearch";
 import ShipDetailsTable from "../component/shipDetailTable/ShipDetailsTable";
 import ShipCheckPointForm from "../component/shipCheckPointForm/ShipCheckPointForm";
+import AddAdminModal from "../component/Modal/admin/AddAdminModal";
+import UpdateAdminModal from "../component/Modal/admin/UpdateAdminModal";
+import AddShipModal from "../component/Modal/ship/AddShipModal";
+import UpdateShipModal from "../component/Modal/ship/UpdateShipModal";
+import AddItemModal from "../component/Modal/item/AddItemModal";
+import UpdateItemModal from "../component/Modal/item/UpdateItemModal";
+import UpdateShipCheckPointModal from "../component/Modal/ship/UpdateShipCheckPointModal";
 
 const API_HOST = "https://lightcyan-scorpion-333008.hostingersite.com/api/";
 
@@ -152,7 +158,6 @@ const AdminDashboard = () => {
     fetchData("admin", "admin/read.php");
     fetchData("ship", "ship/read.php");
     fetchData("item", "item/read.php");
-    // fetchData("checkpoint", "ship_chek_point/read.php");
   }, []);
 
   // handel card
@@ -431,6 +436,16 @@ const AdminDashboard = () => {
     navigate("/login");
   };
 
+  const statuses = [
+    { value: "Created", label: "Created" },
+    { value: "Collected", label: "Collected" },
+    { value: "Departed", label: "Departed" },
+    { value: "In transit", label: "In transit" },
+    { value: "Arrived at destination", label: "Arrived at destination" },
+    { value: "Out for delivery", label: "Out for delivery" },
+    { value: "Delivered", label: "Delivered" },
+  ];
+
   //  pahsn dani dashbord
   return (
     <>
@@ -497,721 +512,84 @@ const AdminDashboard = () => {
                 onChange={handleInputChange}
                 // bo bashi ship chek point input bo hall pzhardni code gashtaka
                 dataShip={state["ship"]}
+                
               />
             )}
           </div>
         )}
 
-        {/* Modal for adding new admin */}
+        {/* modal for adding new admin */}
         {isModalOpen && modalEntity === "admin" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white p-6 rounded-lg shadow-lg w-96"
-            >
-              <h2 className="text-xl font-bold mb-4">Add New Admin</h2>
-              {/* Input for admin_name */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Name
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="admin_name"
-                  value={modalData.admin_name || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Input for admin_password */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Password
-                </label>
-                <input
-                  required
-                  type="password"
-                  name="admin_password"
-                  value={modalData.admin_password || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Input for admin_phone */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Phone
-                </label>
-                <input
-                  required
-                  type="number"
-                  name="admin_phone"
-                  value={modalData.admin_phone || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Select for admin_role */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Role
-                </label>
-                <select
-                  name="admin_role"
-                  value={modalData.admin_role || "user"}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                >
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  type="submit"
-                >
-                  Add Admin
-                </button>
-              </div>
-            </form>
-          </div>
+          <AddAdminModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            setIsModalOpen={setIsModalOpen}
+          />
         )}
         {/* Modal update admin */}
         {isModalOpen && modalEntity === "updateAdmin" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault(); // Prevent default behavior
-                if (e.target.checkValidity()) {
-                  handleUpdate(modalEntity, modalData, "admin");
-                } else {
-                  console.warn("Form validation failed");
-                }
-              }}
-              className="bg-white p-6 rounded-lg shadow-lg w-96"
-            >
-              <h2 className="text-xl font-bold mb-4">Update Admin</h2>
-              {/* Input for admin_name */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Name
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="admin_name"
-                  value={modalData.admin_name || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Input for admin_password */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Password
-                </label>
-                <input
-                  required
-                  type="password"
-                  name="admin_password"
-                  value={modalData.admin_password || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Input for admin_phone */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Phone
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="admin_phone"
-                  value={modalData.admin_phone || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              {/* Select for admin_role */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Admin Role
-                </label>
-                <select
-                  name="admin_role"
-                  value={modalData.admin_role || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                >
-                  <option value="">Select Role</option>
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  type="submit"
-                >
-                  Update Admin
-                </button>
-              </div>
-            </form>
-          </div>
+          <UpdateAdminModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleUpdate={handleUpdate}
+            setIsModalOpen={setIsModalOpen}
+            modalEntity={modalEntity}
+          />
         )}
 
         {/* modal for adding new ship */}
         {isModalOpen && modalEntity === "ship" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white p-6 rounded-lg shadow-lg w-96"
-            >
-              <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
-              <div className="mb-4">
-                {/* admin ID (Dropdown) */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Ship Code
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="ship_code"
-                    value={modalData.ship_code || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Loading Area
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="ship_londing_area"
-                  value={modalData.ship_londing_area || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Destination
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="ship_destination"
-                  value={modalData.ship_destination || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Start Date & Time
-                </label>
-                <input
-                  required
-                  type="datetime-local"
-                  name="ship_start_date"
-                  value={modalData.ship_start_date || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  End Date & Time
-                </label>
-                <input
-                  required
-                  type="datetime-local"
-                  name="ship_end_date"
-                  value={modalData.ship_end_date || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Add Ship
-                </button>
-              </div>
-            </form>
-          </div>
+          <AddShipModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            setIsModalOpen={setIsModalOpen}
+          />
         )}
         {/* modal for adding update ship */}
         {isModalOpen && modalEntity === "updateShip" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault(); // Prevent default behavior
-                if (e.target.checkValidity()) {
-                  handleUpdate(modalEntity, modalData, "ship");
-                } else {
-                  console.warn("Form validation failed");
-                }
-              }}
-              className="bg-white p-6 rounded-lg shadow-lg w-96"
-            >
-              <h2 className="text-xl font-bold mb-4">Add New Ship</h2>
-              <div className="mb-4">
-                {/* ship ID (Dropdown) */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">
-                    Ship Code
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="ship_code"
-                    value={modalData.ship_code || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Loading Area
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="ship_londing_area"
-                  value={modalData.ship_londing_area || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Destination
-                </label>
-                <input
-                  required
-                  type="text"
-                  name="ship_destination"
-                  value={modalData.ship_destination || ""}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Update Ship
-                </button>
-              </div>
-            </form>
-          </div>
+          <UpdateShipModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleUpdate={handleUpdate}
+            setIsModalOpen={setIsModalOpen}
+            modalEntity={modalEntity}
+          />
         )}
 
         {/* Modal for adding new items */}
         {isModalOpen && modalEntity === "item" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={(e) => handleSubmit(e)}
-              className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3"
-            >
-              <h2 className="text-xl font-bold mb-4">Add New Item</h2>
-              <div className="grid grid-cols-2 gap-4">
-                {/* Ship ID (Dropdown) */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Ship Code
-                  </label>
-                  <select
-                    required
-                    name="ship_id"
-                    value={modalData.ship_id || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  >
-                    <option value="">Select Ship</option>
-                    {state.ship &&
-                      state.ship.map((ship) => (
-                        <option key={ship.ship_id} value={ship.ship_id}>
-                          {ship.ship_code}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                {/* Item Mark */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Sipping Mark
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_mark"
-                    value={modalData.item_mark || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Cartons Number */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Cartons Number
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    name="item_cartons"
-                    value={modalData.item_cartons || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* CBM */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">CBM</label>
-                  <input
-                    required
-                    type="text"
-                    name="item_cbm"
-                    value={modalData.item_cbm || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Item Name */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Item Name
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_name"
-                    value={modalData.item_name || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Weight */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Weight
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    name="item_wieght"
-                    value={modalData.item_wieght || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Owner Name */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Owner Name
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_owner_name"
-                    value={modalData.item_owner_name || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Owner Phone */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Owner Phone
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    name="item_owner_phone"
-                    value={modalData.item_owner_phone || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Date & Time
-                  </label>
-                  <input
-                    required
-                    type="datetime-local"
-                    name="item_date"
-                    value={modalData.item_date || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end space-x-4 mt-4">
-                <button
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Add Item
-                </button>
-              </div>
-            </form>
-          </div>
+          <AddItemModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            setIsModalOpen={setIsModalOpen}
+            state={state}
+          />
         )}
         {/* Modal for adding update items */}
         {isModalOpen && modalEntity === "updateItem" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault(); // Prevent default behavior
-                if (e.target.checkValidity()) {
-                  handleUpdate(modalEntity, modalData, "item");
-                } else {
-                  console.warn("Form validation failed");
-                }
-              }}
-              className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3"
-            >
-              <h2 className="text-xl font-bold mb-4">Add New Item</h2>
-              <div className="grid grid-cols-2 gap-4">
-                {/* Ship ID (Dropdown) */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Ship Code
-                  </label>
-                  <select
-                    required
-                    name="ship_id"
-                    value={modalData.ship_id || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  >
-                    <option value="">Select Ship</option>
-                    {state.ship &&
-                      state.ship.map((ship) => (
-                        <option key={ship.ship_id} value={ship.ship_id}>
-                          {ship.ship_code}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                {/* Item Mark */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Shipping Mark
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_mark"
-                    value={modalData.item_mark || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Cartons Number */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Cartons Number
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    name="item_cartons"
-                    value={modalData.item_cartons || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* CBM */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">CBM</label>
-                  <input
-                    required
-                    type="text"
-                    name="item_cbm"
-                    value={modalData.item_cbm || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Item Name */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Item Name
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_name"
-                    value={modalData.item_name || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Weight */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Weight
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    name="item_wieght"
-                    value={modalData.item_wieght || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Owner Name */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Owner Name
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_owner_name"
-                    value={modalData.item_owner_name || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                {/* Owner Phone */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Owner Phone
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="item_owner_phone"
-                    value={modalData.item_owner_phone || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end space-x-4 mt-4">
-                <button
-                  type="button"
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Update Item
-                </button>
-              </div>
-            </form>
-          </div>
+          <UpdateItemModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleUpdate={handleUpdate}
+            setIsModalOpen={setIsModalOpen}
+            modalEntity={modalEntity}
+            state={state}
+          />
         )}
+
         {/* Modal for adding update items */}
         {isModalOpen && modalEntity === "updateship_chek_point" && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault(); // Prevent default behavior
-                if (e.target.checkValidity()) {
-                  handleUpdate(modalEntity, modalData, "ship_chek_point");
-                } else {
-                  console.warn("Form validation failed");
-                }
-              }}
-              className="bg-white p-6 rounded-lg shadow-lg w-[1000px] mx-3"
-            >
-              <h2 className="text-xl font-bold mb-4">Add New Item</h2>
-              <div className="grid gap-4">
-                <div className="mb-4 w-full">
-                  <label className="block text-sm font-medium mb-2">
-                    Landing Point
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    name="ship_chek_point_land_point"
-                    value={modalData.ship_chek_point_land_point || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2 bg-slate-50"
-                  />
-                </div>
-                <div className="mb-4 w-full">
-                  <label className="block text-sm font-medium mb-2">Note</label>
-                  <input
-                    required
-                    type="text"
-                    name="ship_chek_point_note"
-                    value={modalData.ship_chek_point_note || ""}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2 bg-slate-50"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end space-x-4 mt-4">
-                <button
-                  type="button"
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Update Chek Point
-                </button>
-              </div>
-            </form>
-          </div>
+          <UpdateShipCheckPointModal
+            modalData={modalData}
+            handleInputChange={handleInputChange}
+            handleUpdate={handleUpdate}
+            setIsModalOpen={setIsModalOpen}
+            modalEntity={modalEntity}
+            statuses={statuses}
+          />
         )}
       </div>
     </>
@@ -1293,165 +671,8 @@ const Section = ({
           onAddChekPoint={onAddChekPoint}
         />
       ) : (
-        // <form
-        //   onSubmit={(e) => onAddChekPoint(e)}
-        //   className="lg:flex-row flex flex-col justify-center items-center w-full  gap-5 p-5"
-        // >
-        //   <div className="mb-4 w-full">
-        //     <label className="block text-sm font-medium mb-2">Ship Code</label>
-        //     <select
-        //       required
-        //       name="ship_id"
-        //       value={modalData.ship_id || ""}
-        //       onChange={onChange}
-        //       className="w-full border rounded px-3 py-2 bg-slate-50"
-        //     >
-        //       <option value="">Select Ship</option>
-        //       {dataShip &&
-        //         dataShip.map((ship) => (
-        //           <option key={ship.ship_id} value={ship.ship_id}>
-        //             {ship.ship_code}
-        //           </option>
-        //         ))}
-        //     </select>
-        //   </div>
-        //   <div className="mb-4 w-full">
-        //     <label className="block text-sm font-medium mb-2">
-        //       Landing Point
-        //     </label>
-        //     <input
-        //       required
-        //       type="text"
-        //       name="ship_chek_point_land_point"
-        //       value={modalData.ship_chek_point_land_point || ""}
-        //       onChange={onChange}
-        //       className="w-full border rounded px-3 py-2 bg-slate-50"
-        //     />
-        //   </div>
-        //   <div className="mb-4 w-full">
-        //     <label className="block text-sm font-medium mb-2">Ship Status</label>
-        //     <select
-        //       required
-        //       name="ship_chek_point_note"
-        //       value={modalData.ship_chek_point_note || ""}
-        //       onChange={onChange}
-        //       className="w-full border rounded px-3 py-2 bg-slate-50"
-        //     >
-        //       <option value="" disabled>
-        //         Select a status
-        //       </option>
-        //       <option value="Created">Created</option>
-        //       <option value="Collected">Collected</option>
-        //       <option value="Departed">Departed</option>
-        //       <option value="In transit">In transit</option>
-        //       <option value="Arrived at destination">
-        //         Arrived at destination
-        //       </option>
-        //       <option value="Out for delivery">Out for delivery</option>
-        //       <option value="Delivered">Delivered</option>
-        //     </select>
-        //   </div>
-
-        //   <div className="mb-4 w-full">
-        //     <label className="block text-sm font-medium mb-2">Date</label>
-        //     <input
-        //       required
-        //       type="date"
-        //       name="ship_check_point_date"
-        //       value={modalData.ship_check_point_date || ""}
-        //       onChange={onChange}
-        //       className="w-full border rounded px-3 py-2 bg-slate-50"
-        //     />
-        //   </div>
-        //   <div className=" place-self-center w-full mt-4">
-        //     <button
-        //       type="submit"
-        //       className="bg-blue-500 text-white px-4 py-2 w-full lg:w-fit  rounded hover:bg-blue-600"
-        //     >
-        //       Add Landing Point
-        //     </button>
-        //   </div>
-        // </form>
         <>
           {title !== "shipDetail" ? (
-            // <>
-            //   <button
-            //     onClick={onAddClick}
-            //     className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600"
-            //   >
-            //     Add New {title}
-            //   </button>
-            //   <div className="overflow-auto">
-            //     <table className="table-auto w-full text-left border-collapse">
-            //       <thead>
-            //         <tr className="bg-gray-200">
-            //           {data.length > 0 &&
-            //             Object.keys(data[0])
-            //               .filter((key) => !excludedFields.includes(key))
-            //               .map((key) => (
-            //                 <th
-            //                   key={key}
-            //                   className="border-b px-4 py-2 text-sm text-gray-600"
-            //                 >
-            //                   {key}
-            //                 </th>
-            //               ))}
-            //           {data.length > 0 && (
-            //             <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-            //               Actions
-            //             </th>
-            //           )}
-            //         </tr>
-            //       </thead>
-
-            //       <tbody>
-            //         {data.map((item, index) => (
-            //           <tr key={index} className="hover:bg-gray-100">
-            //             {Object.entries(item)
-            //               .filter(([key]) => !excludedFields.includes(key)) // Exclude unwanted fields
-            //               .map(([key, value], i) => (
-            //                 <td
-            //                   onClick={() =>
-            //                     title === "ship"
-            //                       ? onShipClick("shipDetail", item)
-            //                       : ""
-            //                   }
-            //                   key={i}
-            //                   className="border-b px-4 py-2 text-sm text-gray-800"
-            //                 >
-            //                   {value}
-            //                 </td>
-            //               ))}
-            //             <td className="border-b px-4 py-2 text-center">
-            //               <button
-            //                 onClick={() => handleUpdateClick(title, item)} // Pass the item for update
-            //                 className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
-            //               >
-            //                 Update
-            //               </button>
-            //               <button
-            //                 onClick={() => onDelete(item)}
-            //                 className="text-red-500 hover:underline ml-2 border-red-400 border rounded px-1"
-            //               >
-            //                 Delete
-            //               </button>
-            //               {title === "ship" ? (
-            //                 <button
-            //                   onClick={() => onChangeState(item)}
-            //                   className="text-green-500 hover:underline ml-2 border-green-400 border rounded px-1"
-            //                 >
-            //                   state
-            //                 </button>
-            //               ) : (
-            //                 ""
-            //               )}
-            //             </td>
-            //           </tr>
-            //         ))}
-            //       </tbody>
-            //     </table>
-            //   </div>
-            // </>
             <TableWithSearch
               title={title}
               data={data}
@@ -1461,134 +682,17 @@ const Section = ({
               onDelete={onDelete}
               onChangeState={onChangeState}
               onAddClick={onAddClick}
+             
             />
           ) : (
-            // <div className="overflow-x-auto">
-            //   <h1 className="font-inter text-3xl">Ship land Point</h1>
-            //   <table className="  w-full text-left border-collapse my-7">
-            //     <thead>
-            //       <tr className="bg-gray-200">
-            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-            //           ship_code
-            //         </th>
-            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-            //           ship_chek_point_land_point
-            //         </th>
-            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-            //           ship_check_point_date
-            //         </th>
-            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-            //           ship_chek_point_note
-            //         </th>
-            //         <th className="border-b px-4 py-2 text-sm text-gray-600 text-center">
-            //           Action
-            //         </th>
-            //       </tr>
-            //     </thead>
-            //     <tbody>
-            //       {shipDetailData.ship_chek_point &&
-            //         shipDetailData.ship_chek_point.map((item, index) => (
-            //           <tr key={index} className="border-b text-black">
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.ship_code}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.ship_chek_point_land_point}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.ship_check_point_date}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.ship_chek_point_note}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center ">
-            //               <button
-            //                 onClick={() => handleUpdateClick(title, item)} // Pass the item for update
-            //                 className="text-blue-500 hover:underline border-blue-400 border rounded px-1"
-            //               >
-            //                 Update
-            //               </button>
-            //               <button
-            //                 onClick={() => onDelete(item)}
-            //                 className="text-red-500 hover:underline ml-2 my-2 border-red-400 border rounded px-1"
-            //               >
-            //                 Delete
-            //               </button>
-            //             </td>
-            //           </tr>
-            //         ))}
-            //     </tbody>
-            //   </table>
-
-            //   {/*  Ship item */}
-            //   <h1 className="font-inter text-3xl my-3 whitespace-nowrap">Ship Item</h1>
-            //   <table className=" w-full text-left border-collapse">
-            //     <thead>
-            //       <tr className=" border-b bg-gray-200">
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           Shing Mark
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center">
-            //           cartons
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           cbm
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           item name
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           wieght
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           customer name
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           customer contact Number
-            //         </th>
-            //         <th className=" px-4 py-2 text-sm text-gray-600 text-center whitespace-nowrap">
-            //           date
-            //         </th>
-            //       </tr>
-            //     </thead>
-            //     <tbody>
-            //       {shipDetailData.ship_item &&
-            //         shipDetailData.ship_item.map((item, index) => (
-            //           <tr key={index} className="border-b text-black">
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_mark}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_cartons}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center relative">
-            //               {item.item_cbm}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_name}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_wieght} kg
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_owner_name}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_owner_phone}
-            //             </td>
-            //             <td className=" px-4 py-2 text-center">
-            //               {item.item_date}
-            //             </td>
-            //           </tr>
-            //         ))}
-            //     </tbody>
-            //   </table>
-            // </div>
+            
             <ShipDetailsTable
               shipDetailData={shipDetailData}
               handleUpdateClick={handleUpdateClick}
               onDelete={onDelete}
               title={title}
+           
+              
             />
           )}
         </>
