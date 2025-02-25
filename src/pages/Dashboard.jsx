@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, createContext } from "react";
+import React, { useReducer, useContext, createContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TableWithSearch from "../component/ui/TableWithSearch";
@@ -12,7 +12,7 @@ import AddItemModal from "../component/Modal/item/AddItemModal";
 import UpdateItemModal from "../component/Modal/item/UpdateItemModal";
 import UpdateShipCheckPointModal from "../component/Modal/ship/UpdateShipCheckPointModal";
 
-const API_HOST = "https://lightcyan-scorpion-333008.hostingersite.com/api/";
+const API_HOST = "https://toptaj.net/api/";
 
 // State Management with useReducer
 const initialState = {
@@ -52,7 +52,7 @@ const AppProvider = ({ children }) => {
 
     dispatch({ type: "LOADING" });
     try {
-      const response = await axios.get(`${API_HOST}${endpoint}`);
+      const response = await axios.get(`${API_HOST}${endpoint}`)
       const data = response.data.data || [];
       dispatch({ type: "FETCH_SUCCESS", payload: { entity, data } });
     } catch (error) {
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
   const storedAdminData = localStorage.getItem("adminData");
   const adminData = JSON.parse(storedAdminData);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData("admin", "admin/read.php");
     fetchData("ship", "ship/read.php");
     fetchData("item", "item/read.php");
@@ -282,16 +282,12 @@ const AdminDashboard = () => {
   // handel Submit
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default behavior
-    console.log("modalEntity");
-    console.log(modalEntity);
 
     try {
       const endpoint = `${modalEntity}/create.php`;
 
       // Call addEntity to create a new record
-      const res = await addEntity(modalEntity, endpoint, modalData);
-
-      console.log(`${modalEntity} added successfully:`, res.data);
+      await addEntity(modalEntity, endpoint, modalData);
 
       // Close the modal
       setIsModalOpen(false);

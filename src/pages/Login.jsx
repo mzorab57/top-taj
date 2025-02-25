@@ -21,7 +21,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://lightcyan-scorpion-333008.hostingersite.com/api/login.php",
+        "https://toptaj.net/api/login.php",
         formData
       );
 
