@@ -8,6 +8,7 @@ import About from "../pages/About";
 import Dashboard from "../pages/Dashboard";
 import Tracking from "../pages/Tracking";
 import Login from "../pages/Login";
+import Main from "../layouts/Main";
 
 const PrivateRoute = ({ children }) => {
   const storedAdminData = localStorage.getItem("adminData");
@@ -18,26 +19,28 @@ const AppRoutes = () => {
   return (
     <div>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Hero /> <Track />{" "}
-            </>
-          }
-        />
-        <Route path="/services" element={<Services />} />
-        <Route path="/about" element={<About />} />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route path="/tracking/:id" element={<Tracking />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Main />}>
+          <Route
+            index
+            element={
+              <>
+                <Hero /> <Track />
+              </>
+            }
+          />
+          <Route path="services" element={<Services />} />
+          <Route path="about" element={<About />} />
+          <Route
+            path="dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route path="tracking/:id" element={<Tracking />} />
+          <Route path="login" element={<Login />} />
+        </Route>
       </Routes>
     </div>
   );

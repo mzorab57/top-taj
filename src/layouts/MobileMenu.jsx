@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Sling as Hamburger } from 'hamburger-react'
+import { Sling as Hamburger } from "hamburger-react";
 import { scroller } from "react-scroll";
 import { Link } from "react-router-dom";
 import { IoLanguageOutline } from "react-icons/io5";
@@ -7,15 +7,15 @@ import { useTranslation } from "react-i18next";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 
-
 const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [color, setColor] = useState(false);
   const { t, i18n } = useTranslation();
+  const storedAdminData = localStorage.getItem("adminData");
+  const adminData = JSON.parse(storedAdminData);
 
   // Function to change language
   const changeLanguage = (lng) => {
-
     i18n.changeLanguage(lng);
     localStorage.setItem("selectedLanguage", lng);
     // Set the direction based on the selected language
@@ -38,13 +38,28 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
     });
   };
 
+  const scrollToFooter = () => {
+    setOpenMenu(false);
+    scroller.scrollTo("contacts", {
+      smooth: true,
+      offset: 40,
+      duration: 500,
+    });
+  };
+
   const changeHeaderColor = () => {
     window.scrollY >= 20 ? setColor(true) : setColor(false);
   };
   window.addEventListener("scroll", changeHeaderColor);
 
   return (
-    <header className={`${color ? 'lg:hidden fixed top-0 left-0 w-full h-14 font-inter text-white z-50': 'lg:hidden fixed top-20 left-0 w-full h-14 font-inter text-white z-50'}`}>
+    <header
+      className={`${
+        color
+          ? "lg:hidden fixed top-0 left-0 w-full h-14 font-inter text-white z-50"
+          : "lg:hidden fixed top-20 left-0 w-full h-14 font-inter text-white z-50"
+      }`}
+    >
       <div className="container flex justify-end p-4">
         <Hamburger
           toggled={isOpenMenu}
@@ -69,7 +84,7 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
             </Link>
             <Link
               to="/"
-              onClick={()=>setOpenMenu(false)}
+              onClick={() => setOpenMenu(false)}
               state={{ scrollTo: "track" }}
               className="text-2xl hover:text-yellow-500"
             >
@@ -77,22 +92,39 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
             </Link>
             <Link
               to="/about"
-              onClick={() => {window.scrollTo(0,0);scrollToSection("about")}}
+              onClick={() => {
+                window.scrollTo(0, 0);
+                scrollToSection("about");
+              }}
               className="text-2xl hover:text-yellow-500"
             >
               {t("about")}
             </Link>
-           
+
             <Link
               to="/services"
-              onClick={() => {setOpenMenu(false); window.scrollTo(0,0)}}
+              onClick={() => {
+                setOpenMenu(false);
+                window.scrollTo(0, 0);
+              }}
               className="text-2xl hover:text-yellow-500"
             >
               {t("services")}
             </Link>
+            {adminData ? (
+              <Link
+                onClick={() => setOpenMenu(false)}
+                to="/dashboard"
+                className="text-2xl hover:text-yellow-500"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              ""
+            )}
             <Link
               to="/"
-              onClick={() => scrollToSection("contacts")}
+              onClick={() => scrollToFooter()}
               className="text-2xl hover:text-yellow-500"
             >
               {t("contacts")}

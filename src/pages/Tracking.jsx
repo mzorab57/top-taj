@@ -4,7 +4,7 @@ import axios from "axios";
 import { CgArrowRight } from "react-icons/cg";
 
 // API host URL
-const API_HOST = "https://lightcyan-scorpion-333008.hostingersite.com/api/";
+const API_HOST = "https://toptaj.net/api/";
 
 // Initial state for the reducer
 const initialState = {

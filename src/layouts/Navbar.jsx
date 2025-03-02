@@ -18,9 +18,18 @@ const Navbar = () => {
   const storedAdminData = localStorage.getItem("adminData");
   const adminData = JSON.parse(storedAdminData);
 
-   // Function to scroll to the about section
-   const scrollToSection = () => {
+  // Function to scroll to the about section
+  const scrollToSection = () => {
     scroller.scrollTo("hero", {
+      offset: -120,
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart",
+    });
+  };
+
+  const scrollToFooter = () => {
+    scroller.scrollTo("contacts", {
       offset: -120,
       duration: 800,
       delay: 0,
@@ -48,11 +57,6 @@ const Navbar = () => {
   };
   window.addEventListener("scroll", changeHeaderColor);
 
-
-  
-  
-
-
   return (
     <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
       {/* Main Navbar */}
@@ -60,17 +64,37 @@ const Navbar = () => {
         className={` flex flex-col justify-center max-w-[1700px] font-Jost   mx-auto  items-center    w-full   `}
       >
         {/* top */}
-          <div
+        <div
           className={`${
-            color 
+            color
               ? "opacity-0  translate-y-[-100%] duration-200 ease-in transition-all"
               : "opacity-100 translate-y-0 duration-200 ease-out transition-all"
           } flex font-Jost justify-between items-center text-white text-sm py-4 px-1 max-w-[1095px] bg-transparent h-full w-full   `}
         >
           {/* Location */}
-       
-            <span className={`${location.pathname === '/' || location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>China, Kwanjo</span>
-            <span className={`${location.pathname === '/' || location.pathname === '/about' || location.pathname === '/services' ? "text-white": "text-black"}`}>info@toptaj.com</span>
+
+          <span
+            className={`${
+              location.pathname === "/" ||
+              location.pathname === "/about" ||
+              location.pathname === "/services"
+                ? "text-white"
+                : "text-black"
+            }`}
+          >
+            China, Kwanjo
+          </span>
+          <span
+            className={`${
+              location.pathname === "/" ||
+              location.pathname === "/about" ||
+              location.pathname === "/services"
+                ? "text-white"
+                : "text-black"
+            }`}
+          >
+            info@toptaj.com
+          </span>
           {/* Icons */}
           <div
             style={{
@@ -91,8 +115,7 @@ const Navbar = () => {
               <AiFillInstagram size={20} />
             </a>
           </div>
-        </div> 
-     
+        </div>
 
         {/* main nav */}
         <div
@@ -102,21 +125,24 @@ const Navbar = () => {
               : "bg-[#033647]/90 shadow-lg"
           }`}
         >
-           {/* Logo */}
-           <div
-              style={{
-                clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%)",
-              }}
-              className="w-80 object-cover bg-white h-full  "
-            >
-              <Link to="/">
-                <img src={toptajLogo} alt="toptaj Logo" className=" scale-90 lg:-translate-y-5 -translate-y-9 -translate-x-3" />
-              </Link>
-            </div>
-           
+          {/* Logo */}
+          <div
+            style={{
+              clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%)",
+            }}
+            className="w-80 object-cover bg-white h-full  "
+          >
+            <Link to="/">
+              <img
+                src={toptajLogo}
+                alt="toptaj Logo"
+                className=" scale-90 lg:-translate-y-5 -translate-y-9 -translate-x-3"
+              />
+            </Link>
+          </div>
+
           {/* Navigation Menu */}
           <ul className="hidden text-lg translate-x-5 w-full font-Jost tracking-widest  lg:flex justify-start items-center space-x-10 rtl:space-x-10 h-full ">
-           
             <li>
               <Link
                 to="/"
@@ -127,46 +153,59 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link onClick={ ()=> window.scrollTo(0, 0)} to="about" className="hover:text-yellow-400 cursor-pointer">
+              <Link
+                onClick={() => window.scrollTo(0, 0)}
+                to="/about"
+                className="hover:text-yellow-400 cursor-pointer"
+              >
                 {t("about")}
               </Link>
             </li>
             <li>
-              <Link onClick={ ()=> window.scrollTo(0, 0)}  to="/services" className="hover:text-yellow-400">
+              <Link
+                onClick={() => window.scrollTo(0, 0)}
+                to="/services"
+                className="hover:text-yellow-400"
+              >
                 {t("services")}
-              </Link>
-            </li>
-            <li>
-              <Link to="/" state={{ scrollTo: "track" }} className="hover:text-yellow-400">
-               Tracking
               </Link>
             </li>
             <li>
               <Link
                 to="/"
-                onClick={() => scrollToSection("contacts")}
+                state={{ scrollTo: "track" }}
+                className="hover:text-yellow-400"
+              >
+                Tracking
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/"
+                onClick={() => scrollToFooter()}
                 className="hover:text-yellow-400 cursor-pointer"
               >
                 {t("contacts")}
               </Link>
             </li>
-            {adminData ?    <li>
-              <Link
-                to="/dashboard"
-                className="hover:text-yellow-400 cursor-pointer"
-              >
-                Dashboard
-              </Link>
-            </li> :""}
-        
-           
+            {adminData ? (
+              <li>
+                <Link
+                  to="/dashboard"
+                  className="hover:text-yellow-400 cursor-pointer"
+                >
+                  Dashboard
+                </Link>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
           <LanguageSwitcher />
         </div>
-    {/* Mobile Menu */}
-    <MobileMenu setOpenMenu={setOpenMenu} isOpenMenu={isOpenMenu} />
+        {/* Mobile Menu */}
+        <MobileMenu setOpenMenu={setOpenMenu} isOpenMenu={isOpenMenu} />
       </div>
-  
     </div>
   );
 };

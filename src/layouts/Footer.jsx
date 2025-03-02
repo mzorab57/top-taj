@@ -162,7 +162,7 @@ const Footer = () => {
        <div className="bg-gray-900  py-4">
          <div className="container mx-auto  border-t border-t-neutral-500 text-center">
            <p className="text-gray-400">
-             © 2024 TOP SOFT. All rights
+             © 2024 Developed By TOP SOFT. All rights
              reserved.
            </p>
          </div>
