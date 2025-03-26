@@ -39,10 +39,10 @@ const AppProvider = ({ children }) => {
     dispatch({ type: "LOADING" });
     try {
       const url = `${API_HOST}item/read.php?item_mark=${id}`;
-      console.log("Request URL:", url);
+     
   
       const response = await axios.get(url);
-      console.log("API Response:", response.data);
+     
   
       const data = response.data.data || [];
       
@@ -50,10 +50,10 @@ const AppProvider = ({ children }) => {
       const filteredData = data.filter((item) => item.item_mark === id);
   
       if (filteredData.length === 0) {
-        console.warn("No matching items found for item_mark:", id);
+       
         dispatch({ type: "FETCH_SUCCESS", payload: [] });
       } else {
-        console.log("Filtered Data:", filteredData);
+        
         dispatch({ type: "FETCH_SUCCESS", payload: filteredData[0] });
       }
     } catch (error) {
@@ -72,9 +72,9 @@ const AppProvider = ({ children }) => {
 const ShipmentTracker = () => {
   const { id } = useParams(); // Get `id` from the URL
   const { state, fetchData } = useAppContext();
- console.log(state.item);
+
  
-  //  console.log(location.split(0,3)[0]);
+
   // Fetch shipment data on mount
   useEffect(() => {
     fetchData(id); // Fetch shipment data by ID
@@ -110,7 +110,6 @@ const ShipmentTracker = () => {
   if (state.item && state.item.ship_chek_point) {
     state.item.ship_chek_point.forEach((checkPoint) => {
       const stepLabel = statusMap[checkPoint.ship_chek_point_note];
-      console.log("stepLabel:", stepLabel);
   
       if (stepLabel) {
         const stepIndex = steps.findIndex((step) => step.label === stepLabel);
@@ -129,7 +128,7 @@ const ShipmentTracker = () => {
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md overflow-hidden h-screen mt-32 flex justify-center items-center ">
       <div>
-        {/* <img src={topTajLogo} alt="Footer Logo" className="mb-6" /> */}
+       
 
         {/* text */}
         <div className="mb-4">

@@ -82,7 +82,7 @@ const Navbar = () => {
                 : "text-black"
             }`}
           >
-            China, Kwanjo
+            China, Guangzhou
           </span>
           <span
             className={`${
@@ -93,7 +93,7 @@ const Navbar = () => {
                 : "text-black"
             }`}
           >
-            info@toptaj.com
+            info@toptaj.net
           </span>
           {/* Icons */}
           <div
@@ -119,7 +119,7 @@ const Navbar = () => {
 
         {/* main nav */}
         <div
-          className={`flex justify-between  max-w-[1700px] lg:px-6 items-center text-white w-full h-24  duration-500 shadow-lg ease-in-out transform ${
+          className={`flex justify-between  max-w-[1700px] lg:px-6 items-center text-white w-full h-[5.2rem]  duration-500 shadow-lg ease-in-out transform ${
             isScrolled
               ? "bg-[#033647]  fixed top-0 z-30 shadow-lg py-1"
               : "bg-[#033647]/90 shadow-lg"
@@ -136,7 +136,7 @@ const Navbar = () => {
               <img
                 src={toptajLogo}
                 alt="toptaj Logo"
-                className=" scale-90 lg:-translate-y-5 -translate-y-9 -translate-x-3"
+                className=" scale-90 lg:-translate-y-7 -translate-y-10 -translate-x-3"
               />
             </Link>
           </div>

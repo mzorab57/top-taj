@@ -2,36 +2,36 @@ import React from 'react'
 
 const AboutService = () => {
 
-    const featuresData = [
-        {
-          id: 1,
-          icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon1.svg",
-          title: "Warehouse Facility",
-          description:
-            "Temperate ocean-bass sea chub unicorn treefish eulachon tidewater goby.",
-        },
-        {
-          id: 2,
-          icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon2.svg",
-          title: "Cost Effective Pricing",
-          description:
-            "Temperate ocean-bass sea chub unicorn treefish eulachon tidewater goby.",
-        },
-        {
-          id: 3,
-          icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon3.svg",
-          title: "Air Freight Facility",
-          description:
-            "Temperate ocean-bass sea chub unicorn treefish eulachon tidewater goby.",
-        },
-        {
-          id: 4,
-          icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon4.svg",
-          title: "Container Delivery",
-          description:
-            "Temperate ocean-bass sea chub unicorn treefish eulachon tidewater goby.",
-        },
-      ];
+  const featuresData = [
+    {
+      id: 1,
+      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon1.svg",
+      title: "Secure Warehousing",
+      description:
+        "Modern warehousing facilities in strategic locations across Iraq, UAE, and China, ensuring safe storage of your goods."
+    },
+    {
+      id: 2,
+      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon2.svg",
+      title: "Competitive Rates",
+      description:
+        "Cost-effective shipping solutions with transparent pricing and no hidden charges for all your logistics needs."
+    },
+    {
+      id: 3,
+      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon3.svg",
+      title: "Global Air Freight",
+      description:
+        "Fast and reliable air freight services with extensive network coverage and express delivery options."
+    },
+    {
+      id: 4,
+      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon4.svg",
+      title: "Sea Freight Solutions",
+      description:
+        "Comprehensive sea freight services with flexible container options and efficient port-to-port delivery."
+    }
+];
 
   return (
      <section
@@ -60,7 +60,7 @@ const AboutService = () => {
                      className="lg:size-16 size-14"
                    />
                  </span>
-                 <h5 className="mb-4 text-2xl font-bold font-inter text-gray-800">
+                 <h5 className="mb-4 text-2xl font-medium font-jost text-gray-800">
                    {feature.title}
                  </h5>
                  <p className="text-gray-600">{feature.description}</p>

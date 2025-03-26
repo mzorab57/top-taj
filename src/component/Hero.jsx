@@ -49,11 +49,11 @@ const Hero = () => {
   // src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/only-track.png"
   src="/assets/img/plane-bg4.png"
   alt="Track"
-  className="hidden lg:block absolute md:left-16 w-[42rem]  -bottom-[8%]  mt-8 max-w-[44%] 2xl:max-w-[34%] z-50  "
+  className="hidden lg:block absolute  w-[42rem]  -bottom-[8%] lg:max-w-[40%]    mt-8  xl:max-w-[34%] z-50  "
   style={{
-    transform: `translateX(-326px) translateX(${scrollY * 0.3}px)`,
+    transform: `translateX(-180px) translateX(${scrollY * 0.3}px)`,
     transition: "transform 0.1s ease-out",
-    filter: "drop-shadow(0 10px 20px rgba(0.9, 0.9, 0.9, 0.9))", // Strong bottom shadow
+    filter: "drop-shadow(0 10px 10px rgba(0.7, 0.7, 0.9, 0.7))", // Strong bottom shadow
   }}
 />
 

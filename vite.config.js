@@ -8,7 +8,5 @@ export default defineConfig({
     alias: {
       swiper: 'node_modules/swiper',
     },
-    port: 3000,
-    open: true,
   },
 });

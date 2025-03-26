@@ -9,6 +9,7 @@ import AboutVideo from "../component/aboutVideo/AboutVideo";
 import AboutNumber from "../component/aboutNumber/AboutNumber";
 import AboutContact from "../component/aboutContact/AboutContact";
 import AboutLocation from "../component/aboutLocation/AboutLocation";
+import AboutTopTaj from "../component/aboutTopTaj/AboutTopTaj";
 
 const About = () => {
   React.useEffect(() => {
@@ -33,7 +34,8 @@ const About = () => {
   return (
     <>
       <AboutTop />
-      <AboutUs />
+      <AboutTopTaj />
+      {/* <AboutUs /> */}
       <AboutService />
       <AboutVideo />
       <AboutNumber />

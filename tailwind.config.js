@@ -14,8 +14,8 @@ export default {
         },
       },
       fontFamily: {
-        Bedug: ['"Bedug"', "sans"],
-        Trifelia: ['"Trifelia"', "sans"],
+        // Bedug: ['"Bedug"', "sans"],
+        // Trifelia: ['"Trifelia"', "sans"],
         Jost: ['"Jost"', "sans"],
       },
       colors: {
