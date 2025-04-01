@@ -6,9 +6,13 @@
 
 @font-face {
     font-family: 'Trifelia';
-    src: url('./assets/fonts/Trifelia.otf') format('opentype');
+    src: url('/assets/fonts/Trifelia.woff2') format('woff2'),
+         url('/assets/fonts/Trifelia.woff') format('woff'),
+         url('/assets/fonts/Trifelia.ttf') format('truetype'),
+         url('/assets/fonts/Trifelia.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @layer base {
