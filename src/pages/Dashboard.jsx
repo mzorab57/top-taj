@@ -446,7 +446,7 @@ const AdminDashboard = () => {
   return (
     <>
       <div
-        className={`container mx-auto p-4 bg-gray-100 max-w-[1700px] min-h-screen pt-60 relative `}
+        className={`container mx-auto p-4 font-jost bg-gray-100 max-w-[1700px] min-h-screen pt-60 relative `}
       >
         <div className="w-full mb-6 flex justify-end">
           <button

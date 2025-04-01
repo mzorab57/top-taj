@@ -5,10 +5,9 @@ import shipyard from "/assets/img/shipyard.png";
 import airPlane from "/assets/img/air-plane.png";
 import orderTracking from "/assets/img/order-tracking.png";
 
-
 const ServiceCard = () => {
   return (
-    <section className="service-p2 font-jost  flex flex-col size-full px-3">
+    <section className="service-p2 flex flex-col size-full px-3">
       {/*  text */}
       <div className="text-service text-center  text-gray-600 place-self-center py-3">
         <h2 className="lg:text-xl  py-3  text-yellow-400">

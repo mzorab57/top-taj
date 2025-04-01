@@ -28,7 +28,7 @@ const AboutVideo = () => {
         >
           <BiLogoPlayStore size={35} />
         </a>
-        <h2 className=" text-3xl text-white cursor-pointer mt-3 font-inter">
+        <h2 className=" text-3xl text-white cursor-pointer mt-3 ">
           Watch Video
         </h2>
       </div>

@@ -35,13 +35,13 @@ const AboutService = () => {
 
   return (
      <section
-           className="bg-neutral-50 bg-cover bg-center"
+           className="bg-neutral-50 bg-cover  bg-center"
            style={{
              backgroundImage:
                'url("https://wowtheme7.com/tf/logistick/assets/images/shapes/features-bg.png")',
            }}
          >
-           <div className="grid grid-cols-2 lg:grid-cols-4 ">
+           <div className="grid grid-cols-2  lg:grid-cols-4 ">
              {featuresData.map((feature, index) => (
                <div
                  key={feature.id}
@@ -50,7 +50,7 @@ const AboutService = () => {
                  data-aos-duration="1000"
                  data-aos-delay={`${(index + 1) * 100}`}
                >
-                 <span className="absolute top-10 right-4 text-xl font-bold font-inter text-gray-500">
+                 <span className="absolute top-10 right-4 text-xl font-bold  text-gray-500">
                    {`0${feature.id}`}
                  </span>
                  <span className="mb-6 group-hover:animate-bounce">
@@ -60,7 +60,7 @@ const AboutService = () => {
                      className="lg:size-16 size-14"
                    />
                  </span>
-                 <h5 className="mb-4 text-2xl font-medium font-jost text-gray-800">
+                 <h5 className="mb-4 text-2xl font-medium  text-gray-800">
                    {feature.title}
                  </h5>
                  <p className="text-gray-600">{feature.description}</p>

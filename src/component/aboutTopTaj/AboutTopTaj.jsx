@@ -16,9 +16,9 @@ const AboutTopTaj = () => {
   ];
 
   return (
-    <section className="about lg:py-[140px] font-Jost py-[70px] px-4 relative max-lg:overflow-hidden">
+    <section className="about lg:py-[140px] py-[70px] px-4 relative max-lg:overflow-hidden">
       <div className="container mx-auto">
-        <div className="row gy-5  w-[] flex-wrap-reverse flex justify-center gap-5">
+        <div className="row gy-5 flex-wrap-reverse flex justify-center gap-5">
           {/* Left Column */}
           <div className="col-lg-5 pe-xl-5 ">
             <div className="relative h-full ">
@@ -42,7 +42,7 @@ const AboutTopTaj = () => {
                 data-aos-delay="200"
               >
                 <div className="flex flex-col gap-1 items-start">
-                  <h1 className="text-white text-6xl mb-4 font-bold font-inter cursor-big flex justify-between w-full ">
+                  <h1 className="text-white text-6xl mb-4 font-bold  cursor-big flex justify-between w-full ">
                     18+
                   </h1>
 

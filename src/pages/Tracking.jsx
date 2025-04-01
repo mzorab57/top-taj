@@ -126,26 +126,26 @@ const ShipmentTracker = () => {
   
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md overflow-hidden h-screen mt-32 flex justify-center items-center ">
-      <div>
+    <div className="max-w-md mx-auto  font-jost bg-white  rounded-lg shadow-md overflow-hidden h-screen mt-32 px-9 flex justify-center items-center ">
+      <div className="mx-4">
        
 
         {/* text */}
-        <div className="mb-4">
-          <h2 className="text-lg font-Bedug">Latest Update</h2>
-          <p className="text-lg font-Bedug text-gray-500">
+        <div className="mb-4 ">
+          <h2 className="text-lg px-3 font-Bedug">Latest Update</h2>
+          <p className="text-lg px-3 font-Bedug text-gray-500">
             The shipment is currently in: <span className={`${state.item.ship_state === 'created'? 'text-yellow-500 tracking-wider': 'text-green-500 tracking-wider'} `}>{state.item.ship_state || "Unknown"}</span>
           </p>
-          <p className="text-sm text-gray-400">{state.item.ship_end_date}</p>
+          <p className="text-sm text-gray-400 px-3">{state.item.ship_end_date}</p>
         </div>
 
         {/* pointakan */}
-        <div className="flex items-start">
-          <div className="flex flex-col items-center">
+        <div className="flex items-start  ">
+          <div className="flex flex-col items-center ">
             {steps.map((step, index) => (
-              <div key={index} className="flex items-center">
+              <div key={index} className="flex items-center ">
                 <div
-                  className={`w-6 h-6 flex items-center justify-center rounded-full z-[1] ${
+                  className={`w-6 h-6  flex items-center justify-center rounded-full z-[1] ${
                     step.completed ? "bg-green-500" : "bg-gray-300"
                   }`}
                 >
@@ -167,7 +167,7 @@ const ShipmentTracker = () => {
                   )}
                 </div>
                 <div
-                  className={`w-1 -ml-3  ${
+                  className={`w-1 -ml-3.5  ${
                     step.completed ? "bg-green-500" : "bg-gray-300"
                   } ${index < steps.length ? "h-[80px]" : "h-0"}`}
                 />

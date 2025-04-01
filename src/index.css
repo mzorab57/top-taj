@@ -1,24 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-@font-face {
-    font-family: 'Bedug';
-    src: url('/src/assets/fonts/Bedug-Regular.woff2') format('woff2'),
-         url('/src/assets/fonts/Bedug-Regular.woff') format('woff'),
-         url('/src/assets/fonts/Bedug-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
 @font-face {
     font-family: 'Trifelia';
-    src: url('/src/assets/fonts/Trifelia-Regular.woff2') format('woff2'),
-         url('/src/assets/fonts/Trifelia-Regular.woff') format('woff'),
-         url('/src/assets/fonts/Trifelia-Regular.ttf') format('truetype');
+    src: url('./assets/fonts/Trifelia.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
+}
+
+@layer base {
+    html, body {
+        font-family: 'Trifelia', system-ui, -apple-system, sans-serif;
+    }
+}
+
+/* Add utility class for dashboard */
+@layer components {
+  .dashboard-content {
+    @apply font-jost;
   }
+}
 
 

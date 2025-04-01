@@ -61,7 +61,7 @@ const Navbar = () => {
     <div className={` Navbar fixed top-0  z-50 w-full tracking-widest`}>
       {/* Main Navbar */}
       <div
-        className={` flex flex-col justify-center max-w-[1700px] font-Jost   mx-auto  items-center    w-full   `}
+        className={` flex flex-col justify-center max-w-[1700px]    mx-auto  items-center    w-full   `}
       >
         {/* top */}
         <div
@@ -69,7 +69,7 @@ const Navbar = () => {
             color
               ? "opacity-0  translate-y-[-100%] duration-200 ease-in transition-all"
               : "opacity-100 translate-y-0 duration-200 ease-out transition-all"
-          } flex font-Jost justify-between items-center text-white text-sm py-4 px-1 max-w-[1095px] bg-transparent h-full w-full   `}
+          } flex  justify-between items-center text-white text-sm py-4 px-1 max-w-[1095px] bg-transparent h-full w-full   `}
         >
           {/* Location */}
 
@@ -82,19 +82,9 @@ const Navbar = () => {
                 : "text-black"
             }`}
           >
-            China, Guangzhou
+            Midle East
           </span>
-          <span
-            className={`${
-              location.pathname === "/" ||
-              location.pathname === "/about" ||
-              location.pathname === "/services"
-                ? "text-white"
-                : "text-black"
-            }`}
-          >
-            info@toptaj.net
-          </span>
+         
           {/* Icons */}
           <div
             style={{
@@ -119,7 +109,7 @@ const Navbar = () => {
 
         {/* main nav */}
         <div
-          className={`flex justify-between  max-w-[1700px] lg:px-6 items-center text-white w-full h-[5.2rem]  duration-500 shadow-lg ease-in-out transform ${
+          className={`flex justify-between  max-w-[1700px] lg:px-6 items-center text-white w-full h-[5.3rem]  duration-500 shadow-lg ease-in-out transform ${
             isScrolled
               ? "bg-[#033647]  fixed top-0 z-30 shadow-lg py-1"
               : "bg-[#033647]/90 shadow-lg"
@@ -130,19 +120,19 @@ const Navbar = () => {
             style={{
               clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%)",
             }}
-            className="w-80 object-cover bg-white h-full  "
+            className="w-80 object-cover bg-yellow-500 h-full  "
           >
             <Link to="/">
               <img
                 src={toptajLogo}
                 alt="toptaj Logo"
-                className=" scale-90 lg:-translate-y-7 -translate-y-10 -translate-x-3"
+                className=" scale-90 lg:-translate-y-7 -translate-y-11 -translate-x-3"
               />
             </Link>
           </div>
 
           {/* Navigation Menu */}
-          <ul className="hidden text-lg translate-x-5 w-full font-Jost tracking-widest  lg:flex justify-start items-center space-x-10 rtl:space-x-10 h-full ">
+          <ul className="hidden text-lg translate-x-5 w-full  tracking-widest  lg:flex justify-start items-center space-x-10 rtl:space-x-10 h-full ">
             <li>
               <Link
                 to="/"
