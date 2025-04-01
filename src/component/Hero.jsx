@@ -47,11 +47,11 @@ const Hero = () => {
     {/* Truck Image */}
     <img
   // src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/only-track.png"
-  src="/assets/img/plane-bg4.png"
+  src="/assets/img/p2-removebg-preview.png"
   alt="Track"
-  className="hidden lg:block absolute  w-[42rem]  -bottom-[8%] lg:max-w-[40%]    mt-8  xl:max-w-[34%] z-50  "
+  className="hidden lg:block absolute   w-[42rem] bottom-[0] lg:max-w-[50%]      xl:max-w-full z-50  "
   style={{
-    transform: `translateX(-180px) translateX(${scrollY * 0.3}px)`,
+    transform: `translateX(-280px) translateX(${scrollY * 0.3}px)`,
     transition: "transform 0.1s ease-out",
     filter: "drop-shadow(0 10px 10px rgba(0.7, 0.7, 0.9, 0.7))", // Strong bottom shadow
   }}

@@ -136,7 +136,7 @@ const Navbar = () => {
             <li>
               <Link
                 to="/"
-                onClick={() => scrollToSection("hero")}
+                onClick={() => {scrollToSection("hero"); window.scrollTo(0, 0)}}
                 className="hover:text-yellow-400 cursor-pointer h-full px-6"
               >
                 {t("home")}
