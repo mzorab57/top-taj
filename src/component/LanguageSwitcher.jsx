@@ -39,7 +39,7 @@ const LanguageSwitcher = () => {
   return (
     <div className="hidden font-Trifelia lg:flex items-center justify-center relative border-l-yellow-400  border-l-2 h-full pl-5">
       {/* location Icon */}
-      <Link
+      {/* <Link
         to="/"
         state={{ scrollTo: "track" }} // Pass state to indicate the target section
       >
@@ -47,7 +47,7 @@ const LanguageSwitcher = () => {
           className="cursor-pointer hover:text-yellow-400"
           size={30}
         />
-      </Link>
+      </Link> */}
 
       <div
         onClick={(e) => {

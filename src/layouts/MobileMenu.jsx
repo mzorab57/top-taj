@@ -180,7 +180,7 @@ const MobileMenu = ({ isOpenMenu, setOpenMenu }) => {
               <div className="flex gap-x-1 text-sm">
                 <span className="text-yellow-400">
                   {t("location")} :{" "}
-                  <span className="text-white">Chian, Kwanjo</span>
+                  <span className="text-white">China  Guangzhou</span>
                 </span>
               </div>
               <div className="flex pt-5 space-x-3">

@@ -74,7 +74,7 @@ const Navbar = () => {
           {/* Location */}
 
           <span
-            className={`${
+            className={` pl-1 ${
               location.pathname === "/" ||
               location.pathname === "/about" ||
               location.pathname === "/services"
@@ -82,7 +82,7 @@ const Navbar = () => {
                 : "text-black"
             }`}
           >
-            Midle East
+            China-Middle East
           </span>
          
           {/* Icons */}
