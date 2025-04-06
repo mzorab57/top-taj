@@ -39,21 +39,17 @@ const AppProvider = ({ children }) => {
     dispatch({ type: "LOADING" });
     try {
       const url = `${API_HOST}item/read.php?item_mark=${id}`;
-     
-  
+
       const response = await axios.get(url);
-     
-  
+
       const data = response.data.data || [];
-      
+
       // Filter items by item_mark
       const filteredData = data.filter((item) => item.item_mark === id);
-  
+
       if (filteredData.length === 0) {
-       
         dispatch({ type: "FETCH_SUCCESS", payload: [] });
       } else {
-        
         dispatch({ type: "FETCH_SUCCESS", payload: filteredData[0] });
       }
     } catch (error) {
@@ -61,11 +57,30 @@ const AppProvider = ({ children }) => {
       dispatch({ type: "FETCH_ERROR", payload: error.message });
     }
   };
-  
-  
 
   const value = { state, fetchData };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};
+
+// Add this helper function before ShipmentTracker component
+const isToday = (dateStr) => {
+  console.log("isToday function called with dateStr:", dateStr); // Log the input date string
+  const today = new Date();
+  const checkDate = new Date(dateStr );
+  return (
+    checkDate.getDate() === today.getDate() &&
+    checkDate.getMonth() === today.getMonth() &&
+    checkDate.getFullYear() === today.getFullYear()
+  );
+};
+
+// Add this helper function
+const isPastOrToday = (dateStr) => {
+  const today = new Date()  ;
+  const checkDate = new Date(dateStr);
+  today.setHours(0, 0, 0, 0);
+  checkDate.setHours(0, 0, 0, 0);
+  return checkDate <= today;
 };
 
 // ShipmentTracker Component
@@ -73,17 +88,25 @@ const ShipmentTracker = () => {
   const { id } = useParams(); // Get `id` from the URL
   const { state, fetchData } = useAppContext();
 
- 
-
   // Fetch shipment data on mount
   useEffect(() => {
     fetchData(id); // Fetch shipment data by ID
   }, [id]);
 
   // Loading and error states
-  if (state.loading) return <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">Loading...</div>;
+  if (state.loading)
+    return (
+      <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">
+        Loading...
+      </div>
+    );
   if (state.error) return <div>Error: {state.error}</div>;
-  if (!state.item || state.item.item_state !== "active") return <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">No shipment data found for ID: {id}</div>;
+  if (!state.item || state.item.item_state !== "active")
+    return (
+      <div className="h-screen w-full flex justify-center items-center m-auto font-Bedug text-2xl">
+        No shipment data found for ID: {id}
+      </div>
+    );
 
   const statusMap = {
     Created: "Created",
@@ -92,7 +115,7 @@ const ShipmentTracker = () => {
     "In transit": "In transit",
     "Arrived at destination": "Arrived at destination",
     "Out for delivery": "Out for delivery",
-     Delivered: "Delivered",
+    Delivered: "Delivered",
   };
 
   const steps = [
@@ -106,47 +129,76 @@ const ShipmentTracker = () => {
   ];
   // state.item.ship_chek_point_land_point
 
-  // Update steps based on the shipment data
+  // Update the steps processing logic
   if (state.item && state.item.ship_chek_point) {
+    // First, mark all steps as visible but incomplete
+    steps.forEach((step) => {
+      step.visible = true;
+      step.completed = false;
+    });
+
+    // Then process completed steps
     state.item.ship_chek_point.forEach((checkPoint) => {
       const stepLabel = statusMap[checkPoint.ship_chek_point_note];
-  
+
       if (stepLabel) {
         const stepIndex = steps.findIndex((step) => step.label === stepLabel);
         if (stepIndex !== -1) {
-          steps[stepIndex].completed = true;
-          steps[stepIndex].landPoint = checkPoint.ship_chek_point_land_point; // Add land point to the step
-          steps[stepIndex].landPointDate = checkPoint.ship_check_point_date; // Add date point to the step
+          if (isPastOrToday(checkPoint.ship_check_point_date)) {
+            steps[stepIndex].completed = true;
+
+            // Add special styling for today's date
+            if (isToday(checkPoint.ship_check_point_date )) {
+              steps[stepIndex].isToday = true;
+            }
+
+            steps[stepIndex].landPoint = checkPoint.ship_chek_point_land_point;
+            steps[stepIndex].landPointDate = checkPoint.ship_check_point_date;
+          }
         }
       }
     });
   } else {
     console.log("ship or ship_chek_point is undefined");
   }
-  
 
   return (
-    <div className="max-w-md mx-auto  font-jost bg-white  rounded-lg shadow-md overflow-hidden h-screen mt-32 px-9 flex justify-center items-center ">
-      <div className="mx-4">
-       
-
-        {/* text */}
-        <div className="mb-4 ">
-          <h2 className="text-lg px-3 font-Bedug">Latest Update</h2>
+    <div className="max-w-2xl mx-auto  font-jost  rounded-lg overflow-hidden   px-9 flex justify-center items-center ">
+      <div className="px-2 pt-60 pb-14 w-full ">
+        {/* text sarawa */}
+        <div className="mb-4  ">
+          <h2 className="text-xl px-3 font-jost font-semibold text-gray-700">
+            Latest Update
+          </h2>
           <p className="text-lg px-3 font-Bedug text-gray-500">
-            The shipment is currently in: <span className={`${state.item.ship_state === 'created'? 'text-yellow-500 tracking-wider': 'text-green-500 tracking-wider'} `}>{state.item.ship_state || "Unknown"}</span>
+            The shipment is currently in:{" "}
+            <span
+              className={`${
+                state.item.ship_state === "created"
+                  ? "text-yellow-500 tracking-wider"
+                  : "text-green-500 tracking-wider"
+              } `}
+            >
+              {state.item.ship_state || "Unknown"}
+            </span>
           </p>
-          <p className="text-sm text-gray-400 px-3">{state.item.ship_end_date}</p>
+          <p className="text-sm text-gray-400 px-3">
+            {state.item.ship_end_date}
+          </p>
         </div>
 
         {/* pointakan */}
-        <div className="flex items-start  ">
-          <div className="flex flex-col items-center ">
+        <div className="flex items-start w-full max-w-full justify-between  ">
+          <div className="flex flex-col items-center  ">
             {steps.map((step, index) => (
               <div key={index} className="flex items-center ">
                 <div
-                  className={`w-6 h-6  flex items-center justify-center rounded-full z-[1] ${
-                    step.completed ? "bg-green-500" : "bg-gray-300"
+                  className={`w-6 h-6 flex items-center justify-center rounded-full z-[1] ${
+                    step.completed
+                      ? step.isToday
+                        ? "bg-green-500 ring-2 ring-green-300 ring-offset-2"
+                        : "bg-green-500"
+                      : "bg-gray-300"
                   }`}
                 >
                   {step.completed && (
@@ -174,39 +226,45 @@ const ShipmentTracker = () => {
               </div>
             ))}
           </div>
-          <div className="ml-4">
+
+          {/* text land point */}
+          <div className="ml-4 w-[20rem]">
             {steps.map((step, index) => (
               <div
                 key={index}
-                className={`text-sm flex items-center py-[30px] font-medium ${
+                className={`text-sm flex gap-x-4 items-center py-[30px] font-medium ${
                   step.completed ? "text-gray-800" : "text-gray-400"
                 }`}
               >
-                {step.label} <CgArrowRight size={17} className="mx-1" />
-                {step.landPoint && (<div className="relative">
-                  <span className="block text-sm text-blue-500/50">
-                    ({step.landPoint})
-                  </span>
-                  <span className="absolute w-20 text-sm text-gray-500/50">
-                    {step.landPointDate}
-                  </span>
-                  </div>
+                {step.label}
+                {step.landPoint && (
+                  <>
+                    <CgArrowRight size={17} className="mx-1" />
+                    <div className="relative ">
+                      <span className="block text-sm text-blue-500/50">
+                        ({step.landPoint})
+                      </span>
+                      <span className="absolute w-20  lg:w-40 text-sm text-gray-500/50">
+                        {step.landPointDate}
+                      </span>
+                    </div>
+                  </>
                 )}
               </div>
             ))}
           </div>
 
           {/* text swr */}
-          <div className="flex flex-col gap-y-[27rem] ml-10  mt-6 text-sm text-gray-500">
+          <div className="flex flex-col text-lg gap-y-[27rem] pl-8  mt-6  text-gray-500">
             <div>
               <p className="font-medium">Origin</p>
-              <p className="font-medium text-red-500">
+              <p className="font-medium text-sm text-red-400">
                 {state.item.ship_londing_area}
               </p>
             </div>
             <div>
               <p className="font-medium">Destination</p>
-              <p className="font-medium text-red-500">
+              <p className="font-medium text-sm text-red-400 ">
                 {state.item.ship_destination}
               </p>
             </div>
