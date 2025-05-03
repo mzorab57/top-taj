@@ -8,7 +8,7 @@ const AboutUs = () => {
            <img
              src="https://wowtheme7.com/tf/logistick/assets/images/shapes/about-plane.png"
              alt=""
-             className="cursor-big about-plane absolute  transform start-32 top-1/2"
+             className="cursor-big about-plane absolute rounded  transform start-32 top-1/2"
              style={{
                transform: `translateX(${
                  scrollY * 0.3
@@ -22,7 +22,7 @@ const AboutUs = () => {
              data-aos="fade-right"
              data-aos-duration="1000"
              data-aos-delay="500"
-             className="truck-head cursor-big absolute top-56 end-0 hidden lg:block"
+             className="truck-head cursor-big absolute rounded top-56 end-0 hidden lg:block"
              style={{
                transform: `translateY(${scrollY * 0.3}px)`, // Adjust multiplier for effect speed
                transition: "transform 0.2s ease-out", // Smooth transition for transform effect
@@ -46,7 +46,7 @@ const AboutUs = () => {
                        // src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/about-img.png"
                        alt=""
                        // className="w-full h-full object-cover"
-                       className="h-[38rem] object-cover"
+                       className="h-[38rem] object-cover rounded"
                      />
                      <span className="cursor-big tw-w-[75px] tw-h-[75px]   justify-center items-center rounded-full absolute end-0 bottom-0 tw-me-[305px] tw-mb-[305px] hidden d-lg:flex">
                        <img

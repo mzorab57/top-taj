@@ -37,33 +37,25 @@ const About = () => {
   }, [location]);
 
   return (
-    <section id="track" className="pt-32 overflow-hidden  relative z-[1] ">
+    <section id="track" className="py-56 overflow-hidden  relative z-[1] ">
       <div className="w-full  grid lg:flex  lg:flex-wrap  py-20   items-center ">
         {/* Text Section */}
         <div
-          className="relative overflow-hidden  shadow-md z-1 max-w-7xl w-full lg:rounded-r-full"
+          className="relative bg-gradient-to-tr  from-[#033647] to-[#033647]/80 overflow-hidden  shadow-md z-1 max-w-7xl w-full lg:rounded-r-full"
           data-aos="fade-up"
           data-aos-duration="1000"
           data-aos-delay="100"
         >
-          {/* Background Image */}
-          <img
-            src="https://wowtheme7.com/tf/logistick/assets/images/shapes/track-order-bg.png"
-            alt=""
-            data-aos="fade-up"
-            data-aos-duration="1000"
-            className="hidden lg:block absolute top-0 bottom-0 end-0 h-full z-[-1] brightness-150"
-          />
-
+         
           {/* input */}
           <div className="container flex flex-col">
           
-            <div className="relative flex justify-center items-center lg:gap-x-10 mx-4 ">
+            <div className="relative flex justify-center items-center lg:gap-x-10  mx-4 ">
              
               {/* Circle Image */}
-              <div className=" lg:max-w-[240px] max-w-[140px]  lg:max-h-[240px] max-h-[140px] rounded-full overflow-hidden border-8 border-white">
+              <div className=" lg:max-w-[240px] max-w-[140px] bg-gray-800 h-full scale-110 rounded-tr-full rounded-br-full max-h-[140px] rounded overflow-hidden border-2 border-white">
                 <img
-                  src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/track-order-img.png"
+                  src="https://www.commonsupport.com/html/Nasim/Vervoer/images/resource/cta-left-image.jpg"
                   alt=""
                   data-aos="fade-up"
                   data-aos-duration="1000"
@@ -78,7 +70,7 @@ const About = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
               >
-                <h1 className="text-2xl lg:text-5xl text-gray-600  lg:text-white   font-medium font-Jost mb-4  w-full">
+                <h1 className="text-2xl lg:text-5xl text-gray-200  lg:text-white   font-medium font-Jost mb-4  w-full">
                 Track your shipment
               </h1>
                 <div className="flex flex-col lg:flex-row gap-y-2 gap-x-4 my-5  lg:mr-8  ">
@@ -109,7 +101,7 @@ const About = () => {
         {/* Image Section cloud */}
         <div className="w-full ">
           <img
-            src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/biman-blue.png"
+            src="/assets/img/shape-2.png"
             alt="cc"
             data-aos="fade-left"
             data-aos-duration="1000"

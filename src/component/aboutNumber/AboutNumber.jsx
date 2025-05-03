@@ -10,9 +10,9 @@ const AboutNumber = () => {
         }}
       >
         <img
-          src="https://wowtheme7.com/tf/logistick/assets/images/shapes/about-plane.png"
+          src="/assets/img/shape-2.png"
           alt="Plane"
-          className="absolute   bottom-20 left-0 transform translate-x-64 -translate-y-96 rotate-[-40deg]"
+          className="absolute  -bottom-2 lg:bottom-20 left-0 transform lg:scale-75 lg:-translate-y-[29rem]  "
         />
 
         <div className="container mx-auto text-center">
@@ -29,27 +29,29 @@ const AboutNumber = () => {
           {/* Icons Grid */}
           <div className="grid max-w-7xl mx-auto px-4 grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Grid Item */}
-            {[
+            {[ 
               {
-                icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/transport-way-icon1.svg",
+                icon: "/assets/img/werehouse.png",
                 value: "560",
                 label: "Main Warehouses",
-                delay: 200,
-              },
+                delay: 200
+              } ,
+            
               {
-                icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/transport-way-icon2.svg",
+              icon: "/assets/img/corsse.png",
                 value: "100%",
                 label: "Supply Engineers",
                 delay: 300,
               },
               {
-                icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/transport-way-icon3.svg",
+                icon: "/assets/img/air.png",
                 value: "3m+",
                 label: "Countries Covered",
                 delay: 400,
               },
               {
-                icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/transport-way-icon4.svg",
+               
+ icon: "/assets/img/seaicon.png",
                 value: "30+",
                 label: "Total Services",
                 delay: 500,

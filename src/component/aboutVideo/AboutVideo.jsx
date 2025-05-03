@@ -4,10 +4,10 @@ import { BiLogoPlayStore } from "react-icons/bi";
 
 const AboutVideo = () => {
   return (
-    <section className="overflow-hidden w-full  flex justify-center pt-36">
+    <section className="overflow-hidden w-full px-3 mx-auto container flex justify-center pt-36">
     <div className="relative">
     <img
-        src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/ship-big.png"
+        src="/assets/img/bgHome1.JPG"
         alt=""
         className="  absolute -left-[10%] bottom-[35%]  hidden lg:block"
         style={{
@@ -16,7 +16,7 @@ const AboutVideo = () => {
         }}
       />
       <img
-        src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/video_bg.png"
+         src="/assets/img/bg-2.jpg"
         alt=""
         className="w-full h-full object-cover rounded-xl min-h-[300px]"
       />

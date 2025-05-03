@@ -5,28 +5,28 @@ const AboutService = () => {
   const featuresData = [
     {
       id: 1,
-      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon1.svg",
+      icon: "/assets/img/werehouse.png",
       title: "Secure Warehousing",
       description:
         "Modern warehousing facilities in strategic locations across Iraq, UAE, and China, ensuring safe storage of your goods."
     },
     {
       id: 2,
-      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon2.svg",
+      icon: "/assets/img/corsse.png",
       title: "Competitive Rates",
       description:
         "Cost-effective shipping solutions with transparent pricing and no hidden charges for all your logistics needs."
     },
     {
       id: 3,
-      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon3.svg",
+      icon: "/assets/img/air.png",
       title: "Global Air Freight",
       description:
         "Fast and reliable air freight services with extensive network coverage and express delivery options."
     },
     {
       id: 4,
-      icon: "https://wowtheme7.com/tf/logistick/assets/images/icons/features-icon4.svg",
+      icon: "/assets/img/seaicon.png",
       title: "Sea Freight Solutions",
       description:
         "Comprehensive sea freight services with flexible container options and efficient port-to-port delivery."

@@ -167,7 +167,7 @@ const AboutLocation = () => {
           {/* Right Section - Map */}
           <div className="relative w-full h-full">
             <img
-              src="https://wowtheme7.com/tf/logistick/assets/images/shapes/map-img.png"
+              src="https://www.commonsupport.com/html/Nasim/Vervoer/images/resource/map-image-2.png"
               alt="Global Presence Map"
               className="w-full h-auto"
             />

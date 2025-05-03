@@ -5,9 +5,10 @@ const AboutCard = () => {
     <section className="xl:flex">
     {/* Left Section */}
     <div className="w-full xl:w-1/2 relative">
-      <div className="flex h-full">
+      <div className="flex h-3/4">
         <img
-          src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/contact-us-img2.png"
+       
+          src=" https://www.commonsupport.com/html/Nasim/Vervoer/images/resource/about-image-2.jpg"
           alt=""
           className="hidden sm:block"
         />
@@ -37,11 +38,11 @@ const AboutCard = () => {
     </div>
 
     {/* Right Section */}
-    <div className="w-full xl:w-1/2 relative">
-      <div className="flex sm:flex-row flex-col">
+    <div className="w-full  xl:w-1/2 relative">
+      <div className="flex h-3/4 sm:flex-row flex-col">
         <div className="relative">
           <img
-            src=" https://wowtheme7.com/tf/logistick/assets/images/thumbs/contact-us-img1.png"
+            src="https://www.commonsupport.com/html/Nasim/Vervoer/images/resource/cta-left-image.jpg"
            
             alt=""
             className="w-full h-full object-cover"
