@@ -78,34 +78,32 @@ const Hero = () => {
             >
               Flexible Logistics, Fast Delivery, & Secure Packages
             </h1>
-            <div className="flex gap-2 text-sm lg:text-xl mt-8  justify-start">
+            <div className="flex gap-4 text-sm lg:text-xl mt-8 justify-start">
               {/* View Services Button */}
               <Link
                 to="/"
                 state={{ scrollTo: "track" }}
-                className="btn btn-main hover-style-two button--stroke flex items-center gap-4 group active:translate-y-2"
+                className="transform hover:scale-105 transition-transform duration-300 active:translate-y-1"
               >
-                <div className="  font-Trifelia bg-yellow-400 px-6 py-5 text-white rounded tracking-wider flex justify-start items-center">
-                  Tracking
-                  <span>
-                    <FaCircleArrowDown size={25} className="ml-2" />
-                  </span>
+                <div className="font-Trifelia bg-gradient-to-r from-yellow-400 to-yellow-500 px-8 py-3 text-white rounded-lg shadow-lg flex items-center space-x-2 hover:shadow-xl">
+                  <span className="tracking-wider ">Tracking</span>
+                  <FaCircleArrowDown size={22} className="animate-bounce" />
                 </div>
               </Link>
 
               {/* Who We Are Link */}
               <Link
                 to="/about"
-                className="flex items-center pl-2 gap-x-2 rounded text-white bg-black/55 font-Trifelia border border-gray-400 active:translate-y-2"
+                className="transform hover:scale-105 transition-transform duration-300 active:translate-y-1 flex items-center px-6 py-3 rounded-lg text-white bg-black/75 border-2 border-yellow-400/50 hover:border-yellow-400 shadow-lg hover:shadow-xl"
                 data-aos="fade-up"
                 data-aos-duration="1000"
                 data-aos-delay="400"
               >
-                Who we are
+                <span className="mr-2">About Us</span>
                 <img
                   src="/assets/img/rotated-right-arrow.png"
                   alt="arrow right"
-                  className="bg-white rounded-full scale-75"
+                  className="w-6 h-6 bg-white rounded-full hover:rotate-45 transition-transform duration-300"
                 />
               </Link>
             </div>

@@ -22,13 +22,13 @@ const Footer = () => {
       email: ["info@toptaj.net"],
       hasWhatsapp: true,
     },
-    {
-      title: "Iran Office",
-      address:
-        "Jihad Square, Sports Boulevard, Corner of Azizi Passage Alley and Tanin, Baneh City, Kordestan",
-      phone: ["+98 873 422 0619", "+98 918 875 4615"],
-      email: ["Iran@toptaj.net"],
-    },
+    // {
+    //   title: "Iran Office",
+    //   address:
+    //     "Jihad Square, Sports Boulevard, Corner of Azizi Passage Alley and Tanin, Baneh City, Kordestan",
+    //   phone: ["+98 873 422 0619", "+98 918 875 4615"],
+    //   email: ["Iran@toptaj.net"],
+    // },
     {
       title: "China Office",
       address:
