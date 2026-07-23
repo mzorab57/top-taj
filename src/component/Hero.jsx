@@ -53,7 +53,7 @@ const Hero = () => {
       {/* Truck Image */}
       <img
         // src="https://wowtheme7.com/tf/logistick/assets/images/thumbs/only-track.png"
-        src="/assets/img/p2-removebg-preview.png"
+        src="/assets/img/p2-removebg-preview.webp"
         alt="Track"
         className="hidden lg:block absolute   w-[42rem] bottom-[0] lg:max-w-[50%]      xl:max-w-full z-50  "
         style={{
